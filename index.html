@@ -1,31 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Time Zone Converter</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <div class="welcome-section">
-            <h1>Welcome to Time Zone Converter</h1>
-            <p>Convert time across different zones with ease!</p>
+            <h1>Time Zone Converter</h1>
+            <p>Convert times between different time zones</p>
         </div>
+        
         <div class="converter">
             <div class="input-section">
-                <h2>Enter Time Range</h2>
                 <div class="time-inputs">
                     <div class="input-group">
-                        <label>Start Time (IST)</label>
+                        <label for="startTime">Start Time (IST)</label>
                         <input type="datetime-local" id="startTime">
                     </div>
                     <div class="input-group">
-                        <label>End Time (IST)</label>
+                        <label for="endTime">End Time (IST)</label>
                         <input type="datetime-local" id="endTime">
                     </div>
                 </div>
                 <button onclick="convertTime()">Convert</button>
             </div>
-            <div id="results"></div>
+            
+            <div id="results">
+                <!-- Results will be displayed here -->
+            </div>
         </div>
     </div>
     <script src="script.js"></script>
