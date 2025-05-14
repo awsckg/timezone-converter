@@ -24,9 +24,12 @@ function convertTime() {
             <p>Duration: ${endIST.getTime() - startIST.getTime()} ms</p>
         </div>`;
 
+    // Store converted times for difference calculation
+    let convertedTimes = {};
+
     // Add segments for each timezone
     for (let [zone, region] of Object.entries(timeZones)) {
-        const convertedStartTime = startIST.toLocaleString('en-US', {
+        const startOptions = {
             timeZone: region,
             hour12: true,
             year: 'numeric',
@@ -35,18 +38,16 @@ function convertTime() {
             hour: '2-digit',
             minute: '2-digit',
             second: '2-digit'
-        });
-        
-        const convertedEndTime = endIST.toLocaleString('en-US', {
-            timeZone: region,
-            hour12: true,
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-        });
+        };
+
+        const convertedStartTime = startIST.toLocaleString('en-US', startOptions);
+        const convertedEndTime = endIST.toLocaleString('en-US', startOptions);
+
+        // Store the converted Date objects for time difference calculation
+        convertedTimes[zone] = {
+            start: new Date(startIST.toLocaleString('en-US', { timeZone: region })),
+            end: new Date(endIST.toLocaleString('en-US', { timeZone: region }))
+        };
 
         results += `
             <div class="time-segment">
@@ -55,6 +56,35 @@ function convertTime() {
                 <p>End: ${convertedEndTime}</p>
             </div>`;
     }
+
+    // Add time differences section
+    results += `<div class="time-differences">
+        <h3>Time Differences (in hours)</h3>
+        <table>
+            <tr>
+                <th>From</th>
+                <th>To</th>
+                <th>Difference</th>
+            </tr>`;
+
+    // Calculate time differences between zones
+    const zones = Object.keys(timeZones);
+    for (let i = 0; i < zones.length; i++) {
+        for (let j = i + 1; j < zones.length; j++) {
+            const zone1 = zones[i];
+            const zone2 = zones[j];
+            const diff = (convertedTimes[zone2].start - convertedTimes[zone1].start) / (1000 * 60 * 60);
+            
+            results += `
+                <tr>
+                    <td>${zone1}</td>
+                    <td>${zone2}</td>
+                    <td>${Math.abs(diff).toFixed(2)} hours</td>
+                </tr>`;
+        }
+    }
+
+    results += `</table></div>`;
     
     document.getElementById('results').innerHTML = results;
 }
