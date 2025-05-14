@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Time Zone Converter</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         :root {
             --primary-color: #4a90e2;
@@ -121,6 +122,61 @@
             background: #f8f9fa;
             border-radius: 8px;
             border-left: 4px solid var(--accent-color);
+            transition: opacity 0.3s ease;
+        }
+
+        .time-segment {
+            background: white;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .time-segment h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .time-segment p {
+            margin: 0.5rem 0;
+            color: var(--secondary-color);
+        }
+
+        .epoch-segment {
+            background: #f8f9fa;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .time-differences {
+            margin-top: 2rem;
+        }
+
+        .time-differences table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .time-differences th,
+        .time-differences td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e1e1e1;
+        }
+
+        .time-differences th {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .time-differences tr:hover {
+            background: #f5f5f5;
+        }
+
+        .results-title {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
         }
 
         @media (max-width: 600px) {
@@ -153,7 +209,7 @@
                         <input type="datetime-local" id="endTime">
                     </div>
                 </div>
-                <button onclick="convertTime">
+                <button onclick="convertTime()">
                     <span>Convert Time</span> 🔄
                 </button>
             </div>
