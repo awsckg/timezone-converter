@@ -1,6 +1,9 @@
 function convertTime() {
-    const istTime = document.getElementById('istTime').value;
-    const ist = new Date(istTime);
+    const startTime = document.getElementById('startTime').value;
+    const endTime = document.getElementById('endTime').value;
+    
+    const startIST = new Date(startTime);
+    const endIST = new Date(endTime);
     
     // Define time zones in desired order
     const timeZones = {
@@ -11,9 +14,18 @@ function convertTime() {
 
     let results = '<h2>Converted Times:</h2>';
     
+    // Add EPOCH time segment first
+    results += `
+        <div class="time-segment epoch-segment">
+            <h3>EPOCH Time</h3>
+            <p>Start: ${startIST.getTime()} ms</p>
+            <p>End: ${endIST.getTime()} ms</p>
+            <p>Duration: ${endIST.getTime() - startIST.getTime()} ms</p>
+        </div>`;
+
     // Add segments for each timezone
     for (let [zone, region] of Object.entries(timeZones)) {
-        const convertedTime = ist.toLocaleString('en-US', {
+        const convertedStartTime = startIST.toLocaleString('en-US', {
             timeZone: region,
             hour12: true,
             year: 'numeric',
@@ -23,20 +35,25 @@ function convertTime() {
             minute: '2-digit',
             second: '2-digit'
         });
+        
+        const convertedEndTime = endIST.toLocaleString('en-US', {
+            timeZone: region,
+            hour12: true,
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+
         results += `
             <div class="time-segment">
                 <h3>${zone}</h3>
-                <p>${convertedTime}</p>
+                <p>Start: ${convertedStartTime}</p>
+                <p>End: ${convertedEndTime}</p>
             </div>`;
     }
-    
-    // Add EPOCH time segment
-    const epochTime = ist.getTime();
-    results += `
-        <div class="time-segment">
-            <h3>EPOCH</h3>
-            <p>${epochTime}</p>
-        </div>`;
     
     document.getElementById('results').innerHTML = results;
 }
