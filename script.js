@@ -21,7 +21,9 @@ function convertTime() {
         'IST': 'Asia/Kolkata',
         'UTC': 'UTC',
         'PST': 'America/Los_Angeles',
-        'UK': 'Europe/London'
+        'UK': 'Europe/London',
+        'AEST': 'Australia/Sydney',
+        'SGT': 'Asia/Singapore'
     };
 
     let results = '<h2 class="results-title">Converted Times:</h2>';
@@ -117,3 +119,27 @@ function convertTime() {
         resultsElement.style.opacity = '1';
     }, 100);
 }
+
+// Function to update current times
+function updateCurrentTimes() {
+    const options = {
+        timeZone: 'Australia/Sydney',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+    };
+
+    document.getElementById('australia-time').textContent = 
+        new Date().toLocaleTimeString('en-US', {...options, timeZone: 'Australia/Sydney'});
+    
+    document.getElementById('europe-time').textContent = 
+        new Date().toLocaleTimeString('en-US', {...options, timeZone: 'Europe/London'});
+    
+    document.getElementById('singapore-time').textContent = 
+        new Date().toLocaleTimeString('en-US', {...options, timeZone: 'Asia/Singapore'});
+}
+
+// Update times every second
+setInterval(updateCurrentTimes, 1000);
+updateCurrentTimes(); // Initial call
