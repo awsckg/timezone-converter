@@ -24,6 +24,9 @@ function convertTime() {
         'UK': 'Europe/London',
         'AEST': 'Australia/Sydney',
         'SGT': 'Asia/Singapore'
+        'CET': 'Europe/Paris',        // Central European Time
+        'EET': 'Europe/Helsinki',     // Eastern European Time
+        'WET': 'Europe/Lisbon'        // Western European Time
     };
 
     let results = '<h2 class="results-title">Converted Times:</h2>';
