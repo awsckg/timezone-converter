@@ -6,10 +6,16 @@
 </head>
 <body>
     <div class="container">
-        <h1>IST to World Time Converter</h1>
+        <div class="welcome-section">
+            <h1>Welcome to Time Zone Converter</h1>
+            <p>Convert time across different zones with ease!</p>
+        </div>
         <div class="converter">
-            <input type="datetime-local" id="istTime">
-            <button onclick="convertTime()">Convert</button>
+            <div class="input-section">
+                <h2>Enter IST Time</h2>
+                <input type="datetime-local" id="istTime">
+                <button onclick="convertTime()">Convert</button>
+            </div>
             <div id="results"></div>
         </div>
     </div>
