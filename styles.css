@@ -171,6 +171,46 @@ button:hover {
     margin-bottom: 1rem;
 }
 
+/* Timezone Select Styles */
+.timezone-select {
+    padding: 0.8rem;
+    border: 2px solid #e1e1e1;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.timezone-select:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+/* Current Times Styles */
+.current-times {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.current-times h3 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.time-zone-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e1e1e1;
+}
+
+.time-zone-item:last-child {
+    border-bottom: none;
+}
+
 @media (max-width: 600px) {
     .container {
         padding: 1rem;
