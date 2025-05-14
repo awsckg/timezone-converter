@@ -8,6 +8,7 @@ function convertTime() {
     // Define time zones in desired order
     const timeZones = {
         'IST': 'Asia/Kolkata',
+        'UTC': 'UTC',
         'PST': 'America/Los_Angeles',
         'UK': 'Europe/London'
     };
