@@ -2,7 +2,6 @@ function convertTime() {
     const startTime = document.getElementById('startTime').value;
     const endTime = document.getElementById('endTime').value;
     
-    // Add debug logs
     console.log('Start Time:', startTime);
     console.log('End Time:', endTime);
     
@@ -12,6 +11,7 @@ function convertTime() {
     }
 
     try {
+        // Create Date objects and adjust for IST (UTC+5:30)
         const startIST = new Date(startTime);
         const endIST = new Date(endTime);
         
@@ -19,8 +19,7 @@ function convertTime() {
             alert('Invalid date format');
             return;
         }
-        
-        // Define time zones in desired order
+
         const timeZones = {
             'IST': 'Asia/Kolkata',
             'UTC': 'UTC',
@@ -39,45 +38,47 @@ function convertTime() {
                 <p>Duration: ${endIST.getTime() - startIST.getTime()} ms</p>
             </div>`;
 
-        // Store converted times for difference calculation
         let convertedTimes = {};
 
         // Add segments for each timezone
         for (let [zone, region] of Object.entries(timeZones)) {
-            const startOptions = {
-                timeZone: region,
-                hour12: true,
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                fractionalSecondDigits: 3
-            };
+            try {
+                const startOptions = {
+                    timeZone: region,
+                    hour12: true,
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                };
 
-            const convertedStartTime = startIST.toLocaleString('en-US', startOptions);
-            const convertedEndTime = endIST.toLocaleString('en-US', startOptions);
+                const convertedStartTime = new Intl.DateTimeFormat('en-US', startOptions).format(startIST);
+                const convertedEndTime = new Intl.DateTimeFormat('en-US', startOptions).format(endIST);
 
-            // Calculate duration in seconds
-            const durationInSeconds = (endIST - startIST) / 1000;
+                // Calculate duration in seconds
+                const durationInSeconds = (endIST - startIST) / 1000;
 
-            // Store the converted Date objects for time difference calculation
-            convertedTimes[zone] = {
-                start: new Date(startIST.toLocaleString('en-US', { timeZone: region })),
-                end: new Date(endIST.toLocaleString('en-US', { timeZone: region }))
-            };
+                // Store the converted times
+                convertedTimes[zone] = {
+                    start: startIST,
+                    end: endIST
+                };
 
-            results += `
-                <div class="time-segment">
-                    <h3>${zone}</h3>
-                    <p>Start: ${convertedStartTime}</p>
-                    <p>End: ${convertedEndTime}</p>
-                    <p>Duration: ${durationInSeconds} seconds</p>
-                </div>`;
+                results += `
+                    <div class="time-segment">
+                        <h3>${zone}</h3>
+                        <p>Start: ${convertedStartTime}</p>
+                        <p>End: ${convertedEndTime}</p>
+                        <p>Duration: ${durationInSeconds.toFixed(2)} seconds</p>
+                    </div>`;
+            } catch (e) {
+                console.error(`Error converting time for ${zone}:`, e);
+            }
         }
 
-        // Add time differences section
+        // Add time differences table
         results += `<div class="time-differences">
             <h3>Time Differences (in hours)</h3>
             <table>
@@ -87,7 +88,6 @@ function convertTime() {
                     <th>Difference</th>
                 </tr>`;
 
-        // Calculate time differences between zones
         const zones = Object.keys(timeZones);
         for (let i = 0; i < zones.length; i++) {
             for (let j = i + 1; j < zones.length; j++) {
