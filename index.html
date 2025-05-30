@@ -69,8 +69,8 @@
         }
 
         .time-inputs {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            display: flex;
+            flex-direction: column;
             gap: 1.5rem;
         }
 
@@ -195,6 +195,12 @@
             margin-bottom: 1rem;
         }
 
+        .datetime-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
         @media (max-width: 600px) {
             .container {
                 padding: 1rem;
@@ -202,6 +208,10 @@
             
             .welcome-section h1 {
                 font-size: 2rem;
+            }
+
+            .datetime-inputs {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -219,31 +229,20 @@
                     <div class="input-group">
                         <label for="timezone">🌍 Select Timezone</label>
                         <select id="timezone">
-                            <option value="UTC">UTC</option>
                             <option value="Asia/Kolkata">IST (India)</option>
-                            <option value="America/New_York">EST (New York)</option>
+                            <option value="UTC">UTC</option>
                             <option value="America/Los_Angeles">PST (Los Angeles)</option>
-                            <option value="Europe/London">GMT (London)</option>
+                            <option value="Europe/London">UK (London)</option>
+                            <option value="Australia/Sydney">AEST (Sydney)</option>
+                            <option value="Asia/Singapore">SGT (Singapore)</option>
+                            <option value="Europe/Paris">CET (Paris)</option>
+                            <option value="Europe/Helsinki">EET (Helsinki)</option>
+                            <option value="Europe/Lisbon">WET (Lisbon)</option>
                         </select>
                     </div>
-                    <div class="input-group">
-                        <label for="startTime">📅 Start Time</label>
-                        <input type="datetime-local" id="startTime">
-                    </div>
-                    <div class="input-group">
-                        <label for="endTime">📅 End Time</label>
-                        <input type="datetime-local" id="endTime">
-                    </div>
-                </div>
-                <button onclick="convertTime()">
-                    <span>Convert Time</span> 🔄
-                </button>
-            </div>
-            
-            <div id="results">
-                <!-- Results will be displayed here -->
-            </div>
-        </div>
-    </div>
-    <script src="script.js"></script>
-</body>
+                    <div class="datetime-inputs">
+                        <div class="input-group">
+                            <label for="startTime">📅 Start Time</label>
+                            <input type="datetime-local" id="startTime">
+                        </div>
+                        <div class="input-group">
