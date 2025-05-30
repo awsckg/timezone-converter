@@ -4,57 +4,132 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Time Zone Converter</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    <!-- Meta tags for SEO -->
+    <meta name="description" content="Convert times between different time zones effortlessly">
+    <meta name="keywords" content="time zone converter, timezone, time conversion, world time">
+    <meta name="author" content="Your Name">
+    
+    <!-- Open Graph tags for social sharing -->
+    <meta property="og:title" content="Time Zone Converter">
+    <meta property="og:description" content="Convert times between different time zones effortlessly">
+    <meta property="og:type" content="website">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png">
+    
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    
+    <!-- Windows Tile -->
+    <meta name="msapplication-TileImage" content="ms-tile-icon.png">
+    <meta name="msapplication-TileColor" content="#4a90e2">
+    
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#4a90e2">
+    
+    <!-- Preconnect to external resources -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
 </head>
 <body>
+    <!-- Main Container -->
     <div class="container">
+        <!-- Welcome Section -->
         <div class="welcome-section">
             <h1>⏰ Time Zone Converter</h1>
             <p>Convert times between different time zones effortlessly</p>
+            <div class="welcome-features">
+                <span class="feature-item">
+                    <i class="fas fa-globe"></i> Multiple Time Zones
+                </span>
+                <span class="feature-item">
+                    <i class="fas fa-clock"></i> Real-time Conversion
+                </span>
+                <span class="feature-item">
+                    <i class="fas fa-history"></i> Epoch Time
+                </span>
+            </div>
         </div>
         
+        <!-- Converter Section -->
         <div class="converter">
+            <!-- Input Section -->
             <div class="input-section">
-                <div class="source-timezone">
-                    <label for="sourceTimezone">From Timezone:</label>
-                    <select id="sourceTimezone">
-                        <option value="IST">IST (India)</option>
-                        <option value="UTC">UTC</option>
-                        <option value="PST">PST (Pacific)</option>
-                        <option value="UK">UK (London)</option>
-                        <option value="AEST">AEST (Sydney)</option>
-                        <option value="SGT">SGT (Singapore)</option>
-                        <option value="CET">CET (Paris)</option>
-                        <option value="EET">EET (Helsinki)</option>
-                        <option value="WET">WET (Lisbon)</option>
-                    </select>
-                    <label for="sourceTime">Select Time:</label>
-                    <input type="datetime-local" id="sourceTime">
+                <div class="time-inputs">
+                    <div class="input-group">
+                        <label for="sourceTime">
+                            <i class="far fa-calendar-alt"></i> Select Date and Time
+                        </label>
+                        <input 
+                            type="datetime-local" 
+                            id="sourceTime"
+                            aria-label="Select date and time"
+                            required
+                        >
+                        <small class="input-help">
+                            Please select your local date and time
+                        </small>
+                    </div>
                 </div>
-
-                <div class="target-timezones">
-                    <label for="targetTimezones">To Timezones:</label>
-                    <select id="targetTimezones" multiple>
-                        <option value="IST">IST (India)</option>
-                        <option value="UTC">UTC</option>
-                        <option value="PST">PST (Pacific)</option>
-                        <option value="UK">UK (London)</option>
-                        <option value="AEST">AEST (Sydney)</option>
-                        <option value="SGT">SGT (Singapore)</option>
-                        <option value="CET">CET (Paris)</option>
-                        <option value="EET">EET (Helsinki)</option>
-                        <option value="WET">WET (Lisbon)</option>
-                    </select>
-                </div>
-
-                <button onclick="convertTime()">Convert Time 🔄</button>
+                
+                <!-- Convert Button -->
+                <button onclick="convertTime()" class="convert-button">
+                    <span class="button-text">Convert Time</span>
+                    <i class="fas fa-sync-alt"></i>
+                </button>
             </div>
             
-            <div id="results">
-                <!-- Results will be displayed here -->
+            <!-- Results Section -->
+            <div id="results" class="results-hidden">
+                <!-- Results will be dynamically populated -->
+                <div class="loading-indicator">
+                    <div class="spinner"></div>
+                    <p>Converting times...</p>
+                </div>
             </div>
         </div>
+        
+        <!-- Footer Section -->
+        <footer class="converter-footer">
+            <p>
+                <i class="fas fa-info-circle"></i>
+                All times are shown in 12-hour format with respective time zones
+            </p>
+            <div class="supported-zones">
+                <p>Supported Time Zones:</p>
+                <div class="zone-tags">
+                    <span class="zone-tag">IST</span>
+                    <span class="zone-tag">UTC</span>
+                    <span class="zone-tag">PST</span>
+                    <span class="zone-tag">UK</span>
+                    <span class="zone-tag">AEST</span>
+                    <span class="zone-tag">SGT</span>
+                    <span class="zone-tag">CET</span>
+                    <span class="zone-tag">EET</span>
+                    <span class="zone-tag">WET</span>
+                </div>
+            </div>
+        </footer>
     </div>
+
+    <!-- Error Modal -->
+    <div id="errorModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Error</h2>
+            <p id="errorMessage"></p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
     <script src="script.js"></script>
+    <noscript>
+        <div class="noscript-warning">
+            This application requires JavaScript to function properly. 
+            Please enable JavaScript in your browser settings.
+        </div>
+    </noscript>
 </body>
 </html>
