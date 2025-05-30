@@ -5,9 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Time Zone Converter</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
     <style>
-        /* Additional styles for the timezone select */
+        /* Keep all existing styles */
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --background-color: #f5f6fa;
+        }
+
+        /* ... (all other existing styles remain the same) ... */
+
+        /* Add additional styles for select element */
         .input-group select {
             padding: 0.8rem;
             border: 2px solid #e1e1e1;
@@ -22,14 +31,6 @@
             border-color: var(--primary-color);
             outline: none;
             box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
-        }
-
-        .selected-timezone {
-            border-left: 4px solid var(--primary-color) !important;
-        }
-
-        .time-inputs {
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         }
     </style>
 </head>
