@@ -61,27 +61,9 @@ body {
 }
 
 .time-inputs {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1.5rem;
-    align-items: center;
-}
-
-.timezone-wrapper {
-    width: 100%;
-    max-width: 500px;
-    margin-bottom: 1rem;
-}
-
-.datetime-inputs {
-    display: flex;
-    justify-content: space-between;
-    gap: 1.5rem;
-    width: 100%;
-}
-
-.datetime-inputs .input-group {
-    flex: 1;
 }
 
 .input-group {
@@ -109,13 +91,7 @@ body {
     box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
 }
 
-.input-group input[type="datetime-local"] {
-    height: 50px;
-    min-width: 100%;
-    padding: 0.8rem 0.5rem;
-    -webkit-appearance: none;
-}
-
+/* New styles for select element */
 .input-group select {
     padding: 0.8rem;
     border: 2px solid #e1e1e1;
@@ -132,30 +108,8 @@ body {
     box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
 }
 
-.timezone-select {
-    padding: 0.8rem;
-    border: 2px solid #e1e1e1;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    width: 100%;
-    background-color: white;
-    color: var(--secondary-color);
-}
-
-.timezone-select:focus {
+.input-group select:hover {
     border-color: var(--primary-color);
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
-}
-
-.timezone-select:hover {
-    border-color: var(--primary-color);
-}
-
-.timezone-select option {
-    padding: 8px;
-    color: var(--secondary-color);
 }
 
 button {
@@ -187,4 +141,63 @@ button:hover {
 .time-segment {
     background: white;
     padding: 1rem;
-    margin: 1
+    margin: 1rem 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.time-segment h3 {
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.time-segment p {
+    margin: 0.5rem 0;
+    color: var(--secondary-color);
+}
+
+.epoch-segment {
+    background: #f8f9fa;
+    border-left: 4px solid var(--accent-color);
+}
+
+.time-differences {
+    margin-top: 2rem;
+}
+
+.time-differences table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.time-differences th,
+.time-differences td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #e1e1e1;
+}
+
+.time-differences th {
+    background: var(--primary-color);
+    color: white;
+}
+
+.time-differences tr:hover {
+    background: #f5f5f5;
+}
+
+.results-title {
+    color: var(--secondary-color);
+    margin-bottom: 1rem;
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 1rem;
+    }
+    
+    .welcome-section h1 {
+        font-size: 2rem;
+    }
+}
