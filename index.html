@@ -1,58 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Time Zone Converter</title>
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Zone Converter</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
 </head>
 <body>
-  <div class="container">
-    <div class="welcome-section">
-      <h1>⏰ Time Zone Converter</h1>
-      <p>Convert times between different time zones effortlessly</p>
-    </div>
-
-    <div class="converter">
-      <div class="input-section">
-        <div class="time-inputs">
-          <div class="input-group">
-            <label for="startTime">📅 Start Time (IST)</label>
-            <input type="datetime-local" id="startTime" />
-          </div>
-          <div class="input-group">
-            <label for="endTime">📅 End Time (IST)</label>
-            <input type="datetime-local" id="endTime" />
-          </div>
+    <div class="container">
+        <div class="welcome-section">
+            <h1>⏰ Time Zone Converter</h1>
+            <p>Convert times between different time zones effortlessly</p>
         </div>
-        <div class="input-group">
-          <label for="baseTimeZone">🌐 Base Time Zone</label>
-          <select id="baseTimeZone">
-            <option value="Asia/Kolkata">🇮🇳 IST</option>
-            <option value="UTC">🌍 UTC</option>
-            <option value="America/Los_Angeles">🇺🇸 PST</option>
-            <option value="Europe/London">🇬🇧 UK</option>
-            <option value="Australia/Sydney">🇦🇺 AEST</option>
-            <option value="Asia/Singapore">🇸🇬 SGT</option>
-            <option value="Europe/Paris">🇫🇷 CET</option>
-            <option value="Europe/Helsinki">🇫🇮 EET</option>
-            <option value="Europe/Lisbon">🇵🇹 WET</option>
-          </select>
-        </div>
-        <button onclick="convertTime()">
-          <span>Convert Time</span> 🔄
-        </button>
-      </div>
+        
+        <div class="converter">
+            <div class="input-section">
+                <div class="time-inputs">
+                    <div class="input-group">
+                        <label for="inputTimeZone">🌐 Input Time Zone</label>
+                        <select id="inputTimeZone">
+                            <option value="Asia/Kolkata">IST (Asia/Kolkata)</option>
+                            <option value="UTC">UTC</option>
+                            <option value="America/Los_Angeles">PST (America/Los_Angeles)</option>
+                            <option value="Europe/London">UK (Europe/London)</option>
+                            <option value="Australia/Sydney">AEST (Australia/Sydney)</option>
+                            <option value="Asia/Singapore">SGT (Asia/Singapore)</option>
+                            <option value="Europe/Paris">CET (Europe/Paris)</option>
+                            <option value="Europe/Helsinki">EET (Europe/Helsinki)</option>
+                            <option value="Europe/Lisbon">WET (Europe/Lisbon)</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="startTime">📅 Start Time</label>
+                        <input type="datetime-local" id="startTime">
+                    </div>
+                    <div class="input-group">
+                        <label for="endTime">📅 End Time</label>
+                        <input type="datetime-local" id="endTime">
+                    </div>
+                </div>
+                <button onclick="convertTime()">
+                    <span>Convert Time</span> 🔄
+                </button>
+            </div>
+            
+            <div id="currentTimeDisplay" class="current-time">
+                <!-- Current time will be displayed here -->
+            </div>
 
-      <div id="results">
-        <!-- Results will be displayed here -->
-      </div>
-      <div class="export-section">
-        <button onclick="exportToCSV()">📥 Export CSV</button>
-      </div>
+            <div id="results">
+                <!-- Results will be displayed here -->
+            </div>
+        </div>
     </div>
-  </div>
-  <script src="script.js"></script>
 </body>
 </html>
