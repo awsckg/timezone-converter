@@ -10,84 +10,35 @@ const timeZones = {
     'WET': 'Europe/Lisbon'
 };
 
-function showError(message) {
-    const errorModal = document.getElementById('errorModal');
-    const errorMessage = document.getElementById('errorMessage');
-    errorMessage.textContent = message;
-    errorModal.style.display = 'block';
+function formatDuration(duration) {
+    const days = Math.floor(duration / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((duration % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((duration % (1000 * 60 * 60)) / (1000 * 60));
+    
+    let durationStr = '';
+    if (days > 0) durationStr += `${days} days `;
+    if (hours > 0) durationStr += `${hours} hours `;
+    if (minutes > 0) durationStr += `${minutes} minutes`;
+    
+    return durationStr.trim() || '0 minutes';
 }
 
 function convertTime() {
-    const sourceTime = document.getElementById('sourceTime').value;
+    const startTime = document.getElementById('startTime').value;
+    const endTime = document.getElementById('endTime').value;
 
-    if (!sourceTime) {
-        showError('Please select a date and time');
+    if (!startTime || !endTime) {
+        alert('Please select both start and end times');
         return;
     }
 
-    const sourceDate = new Date(sourceTime);
-    const epochTime = sourceDate.getTime();
+    const startDate = new Date(startTime);
+    const endDate = new Date(endTime);
     
-    let results = `
-        <div class="time-segment epoch-segment">
-            <h3><i class="fas fa-clock"></i> Epoch Time</h3>
-            <p>${epochTime} milliseconds</p>
-            <p>${Math.floor(epochTime / 1000)} seconds</p>
-        </div>
-        <h2 class="results-title">Times Across Zones</h2>
-        <div class="time-differences">
-    `;
-
-    Object.entries(timeZones).forEach(([zone, timeZone]) => {
-        try {
-            const options = {
-                timeZone: timeZone,
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: true
-            };
-
-            const convertedTime = sourceDate.toLocaleString('en-US', options);
-
-            results += `
-                <div class="time-segment">
-                    <h3><i class="fas fa-globe"></i> ${zone}</h3>
-                    <p><i class="far fa-clock"></i> ${convertedTime}</p>
-                </div>
-            `;
-        } catch (error) {
-            console.error(`Error converting to ${zone}:`, error);
-            showError(`Error converting time for ${zone}`);
-        }
-    });
-
-    results += '</div>';
-
-    const resultsDiv = document.getElementById('results');
-    resultsDiv.innerHTML = results;
-    resultsDiv.classList.remove('results-hidden');
-    resultsDiv.style.opacity = 1;
-}
-
-// Close modal functionality
-document.querySelector('.close-modal')?.addEventListener('click', function() {
-    document.getElementById('errorModal').style.display = 'none';
-});
-
-// Close modal when clicking outside
-window.addEventListener('click', function(event) {
-    const modal = document.getElementById('errorModal');
-    if (event.target === modal) {
-        modal.style.display = 'none';
+    if (endDate < startDate) {
+        alert('End time cannot be earlier than start time');
+        return;
     }
-});
 
-// Initialize loading state
-document.addEventListener('DOMContentLoaded', function() {
-    const resultsDiv = document.getElementById('results');
-    resultsDiv.classList.add('results-hidden');
-});
+    const duration = endDate - startDate;
+    const formattedDuration = formatDuration(duration);
