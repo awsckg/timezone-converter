@@ -28,8 +28,39 @@
             border-left: 4px solid var(--primary-color) !important;
         }
 
-        .time-inputs {
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        /* New styles for datetime inputs */
+        .datetime-group {
+            display: flex;
+            justify-content: space-between;
+            gap: 1.5rem;
+            width: 100%;
+        }
+
+        .datetime-item {
+            flex: 1;
+            text-align: center;
+        }
+
+        .datetime-item .label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+
+        .datetime-item .format {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+
+        @media (max-width: 600px) {
+            .datetime-group {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -42,31 +73,42 @@
         
         <div class="converter">
             <div class="input-section">
-                <div class="time-inputs">
-                    <div class="input-group">
-                        <label for="timezone">🌍 Select Timezone</label>
-                        <select id="timezone">
-                            <option value="UTC">UTC</option>
-                            <option value="Asia/Kolkata">IST (India)</option>
-                            <option value="America/New_York">EST (New York)</option>
-                            <option value="America/Los_Angeles">PST (Los Angeles)</option>
-                            <option value="Europe/London">GMT (London)</option>
-                            <option value="Asia/Tokyo">JST (Tokyo)</option>
-                            <option value="Australia/Sydney">AEST (Sydney)</option>
-                            <option value="Europe/Paris">CET (Paris)</option>
-                            <option value="Asia/Dubai">GST (Dubai)</option>
-                            <option value="Asia/Singapore">SGT (Singapore)</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label for="startTime">📅 Start Time</label>
+                <div class="input-group">
+                    <label for="timezone">🌍 Select Timezone</label>
+                    <select id="timezone">
+                        <option value="UTC">UTC</option>
+                        <option value="Asia/Kolkata">IST (India)</option>
+                        <option value="America/New_York">EST (New York)</option>
+                        <option value="America/Los_Angeles">PST (Los Angeles)</option>
+                        <option value="Europe/London">GMT (London)</option>
+                        <option value="Asia/Tokyo">JST (Tokyo)</option>
+                        <option value="Australia/Sydney">AEST (Sydney)</option>
+                        <option value="Europe/Paris">CET (Paris)</option>
+                        <option value="Asia/Dubai">GST (Dubai)</option>
+                        <option value="Asia/Singapore">SGT (Singapore)</option>
+                    </select>
+                </div>
+
+                <div class="datetime-group">
+                    <div class="datetime-item">
+                        <div class="label">
+                            <span>📅</span>
+                            <span>Start Time</span>
+                        </div>
                         <input type="datetime-local" id="startTime">
+                        <div class="format">dd/mm/yyyy, --:-- --</div>
                     </div>
-                    <div class="input-group">
-                        <label for="endTime">📅 End Time</label>
+                    
+                    <div class="datetime-item">
+                        <div class="label">
+                            <span>📅</span>
+                            <span>End Time</span>
+                        </div>
                         <input type="datetime-local" id="endTime">
+                        <div class="format">dd/mm/yyyy, --:-- --</div>
                     </div>
                 </div>
+
                 <button onclick="convertTime()">
                     <span>Convert Time</span> 🔄
                 </button>
