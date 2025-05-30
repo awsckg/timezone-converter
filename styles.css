@@ -61,9 +61,23 @@ body {
 }
 
 .time-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.timezone-wrapper {
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 1rem;
+}
+
+.datetime-inputs {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1.5rem;
+    width: 100%;
 }
 
 .input-group {
@@ -98,7 +112,6 @@ body {
     -webkit-appearance: none;
 }
 
-/* New timezone select styles */
 .timezone-select {
     padding: 0.8rem;
     border: 2px solid #e1e1e1;
