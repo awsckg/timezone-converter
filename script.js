@@ -1,183 +1,62 @@
-// Function to update current times
-function updateCurrentTimes() {
-    const timeZones = {
-        'IST': 'Asia/Kolkata',
-        'UTC': 'UTC',
-        'PST': 'America/Los_Angeles',
-        'UK': 'Europe/London',
-        'AEST': 'Australia/Sydney',
-        'SGT': 'Asia/Singapore',
-        'CET': 'Europe/Paris',
-        'EET': 'Europe/Helsinki',
-        'WET': 'Europe/Lisbon'
-    };
-
-    const currentTimesDiv = document.getElementById('currentTimes');
-    currentTimesDiv.innerHTML = '';
-
-    for (let [zone, region] of Object.entries(timeZones)) {
-        const now = new Date();
-        const options = {
-            timeZone: region,
-            hour12: true,
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-        };
-
-        const timeString = now.toLocaleString('en-US', options);
-        
-        const timeItem = document.createElement('div');
-        timeItem.className = 'current-time-item';
-        timeItem.innerHTML = `
-            <h4>${zone}</h4>
-            <p>${timeString}</p>
-        `;
-        currentTimesDiv.appendChild(timeItem);
-    }
-}
-
-// Update times every second
-setInterval(updateCurrentTimes, 1000);
-updateCurrentTimes(); // Initial call
+const timeZones = {
+    'IST': 'Asia/Kolkata',
+    'UTC': 'UTC',
+    'PST': 'America/Los_Angeles',
+    'UK': 'Europe/London',
+    'AEST': 'Australia/Sydney',
+    'SGT': 'Asia/Singapore',
+    'CET': 'Europe/Paris',
+    'EET': 'Europe/Helsinki',
+    'WET': 'Europe/Lisbon'
+};
 
 function convertTime() {
-    // Input validation
-    const startTime = document.getElementById('startTime').value;
-    const endTime = document.getElementById('endTime').value;
-    
-    if (!startTime || !endTime) {
-        alert('Please select both start and end times');
-        return;
-    }
-    
-    const startIST = new Date(startTime);
-    const endIST = new Date(endTime);
-    
-    if (endIST < startIST) {
-        alert('End time cannot be earlier than start time');
-        return;
-    }
-
-    // Get selected timezones
-    const selectedTimezones = Array.from(document.getElementById('timezones').selectedOptions)
+    const sourceTimezone = document.getElementById('sourceTimezone').value;
+    const targetTimezones = Array.from(document.getElementById('targetTimezones').selectedOptions)
         .map(option => option.value);
+    const sourceTime = document.getElementById('sourceTime').value;
 
-    if (selectedTimezones.length === 0) {
-        alert('Please select at least one timezone');
+    if (!sourceTime) {
+        alert('Please select a time to convert');
         return;
     }
-    
-    // Filter timeZones object based on selection
-    const timeZones = {
-        'IST': 'Asia/Kolkata',
-        'UTC': 'UTC',
-        'PST': 'America/Los_Angeles',
-        'UK': 'Europe/London',
-        'AEST': 'Australia/Sydney',
-        'SGT': 'Asia/Singapore',
-        'CET': 'Europe/Paris',
-        'EET': 'Europe/Helsinki',
-        'WET': 'Europe/Lisbon'
-    };
 
-    const selectedTimeZonesObj = {};
-    selectedTimezones.forEach(zone => {
-        if (timeZones[zone]) {
-            selectedTimeZonesObj[zone] = timeZones[zone];
-        }
-    });
+    if (targetTimezones.length === 0) {
+        alert('Please select at least one target timezone');
+        return;
+    }
 
-    let results = '<h2 class="results-title">Converted Times:</h2>';
-    
-    // Add EPOCH time segment first
-    results += `
-        <div class="time-segment epoch-segment">
-            <h3><i class="fas fa-clock"></i> EPOCH Time</h3>
-            <p><strong>Start:</strong> ${startIST.getTime()} ms</p>
-            <p><strong>End:</strong> ${endIST.getTime()} ms</p>
-            <p><strong>Duration:</strong> ${endIST.getTime() - startIST.getTime()} ms</p>
-        </div>`;
+    const sourceDate = new Date(sourceTime);
+    let results = '<h2>Converted Times:</h2>';
 
-    // Store converted times for difference calculation
-    let convertedTimes = {};
-
-    // Add segments for each timezone
-    for (let [zone, region] of Object.entries(selectedTimeZonesObj)) {
+    targetTimezones.forEach(targetZone => {
         try {
-            const startOptions = {
-                timeZone: region,
-                hour12: true,
+            const options = {
+                timeZone: timeZones[targetZone],
                 year: 'numeric',
-                month: 'short',
+                month: 'long',
                 day: 'numeric',
                 hour: '2-digit',
                 minute: '2-digit',
-                second: '2-digit'
+                hour12: true
             };
 
-            const convertedStartTime = startIST.toLocaleString('en-US', startOptions);
-            const convertedEndTime = endIST.toLocaleString('en-US', startOptions);
-
-            // Store the converted Date objects for time difference calculation
-            convertedTimes[zone] = {
-                start: new Date(startIST.toLocaleString('en-US', { timeZone: region })),
-                end: new Date(endIST.toLocaleString('en-US', { timeZone: region }))
-            };
+            const convertedTime = new Date(sourceDate.toLocaleString('en-US', {
+                timeZone: timeZones[sourceTimezone]
+            })).toLocaleString('en-US', options);
 
             results += `
-                <div class="time-segment">
-                    <h3><i class="fas fa-globe"></i> ${zone}</h3>
-                    <p><strong>Start:</strong> ${convertedStartTime}</p>
-                    <p><strong>End:</strong> ${convertedEndTime}</p>
-                </div>`;
+                <div class="time-result">
+                    <h3>${targetZone}</h3>
+                    <p>${convertedTime}</p>
+                </div>
+            `;
         } catch (error) {
-            console.error(`Error converting time for ${zone}:`, error);
-            results += `
-                <div class="time-segment error">
-                    <h3>${zone}</h3>
-                    <p>Error converting time for this timezone</p>
-                </div>`;
+            console.error(`Error converting to ${targetZone}:`, error);
         }
-    }
+    });
 
-    // Add time differences section
-    results += `<div class="time-differences">
-        <h3><i class="fas fa-exchange-alt"></i> Time Differences (in hours)</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>From</th>
-                    <th>To</th>
-                    <th>Difference</th>
-                </tr>
-            </thead>
-            <tbody>`;
-
-    // Calculate time differences between zones
-    const zones = Object.keys(selectedTimeZonesObj);
-    for (let i = 0; i < zones.length; i++) {
-        for (let j = i + 1; j < zones.length; j++) {
-            const zone1 = zones[i];
-            const zone2 = zones[j];
-            const diff = (convertedTimes[zone2].start - convertedTimes[zone1].start) / (1000 * 60 * 60);
-            
-            results += `
-                <tr>
-                    <td>${zone1}</td>
-                    <td>${zone2}</td>
-                    <td>${Math.abs(diff).toFixed(2)} hours</td>
-                </tr>`;
-        }
-    }
-
-    results += `</tbody></table></div>`;
-    
-    // Display results with animation
-    const resultsElement = document.getElementById('results');
-    resultsElement.style.opacity = '0';
-    resultsElement.innerHTML = results;
-    setTimeout(() => {
-        resultsElement.style.opacity = '1';
-    }, 100);
+    const resultsDiv = document.getElementById('results');
+    resultsDiv.innerHTML = results;
+    resultsDiv.style.opacity = 1;
 }
