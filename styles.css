@@ -18,6 +18,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 20px;
 }
 
 .container {
@@ -25,7 +26,7 @@ body {
   max-width: 800px;
   background: white;
   border-radius: 20px;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
   padding: 2rem;
 }
 
@@ -103,7 +104,7 @@ button {
   cursor: pointer;
   transition: all 0.3s ease;
   font-weight: 600;
-  width: max-content;
+  align-self: flex-start;
 }
 
 button:hover {
@@ -125,7 +126,7 @@ button:hover {
   padding: 1rem;
   margin: 1rem 0;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .time-segment h3 {
@@ -141,37 +142,6 @@ button:hover {
 .epoch-segment {
   background: #f8f9fa;
   border-left: 4px solid var(--accent-color);
-}
-
-.time-differences {
-  margin-top: 2rem;
-}
-
-.time-differences table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1rem;
-}
-
-.time-differences th,
-.time-differences td {
-  padding: 0.75rem;
-  text-align: left;
-  border-bottom: 1px solid #e1e1e1;
-}
-
-.time-differences th {
-  background: var(--primary-color);
-  color: white;
-}
-
-.time-differences tr:hover {
-  background: #f5f5f5;
-}
-
-.results-title {
-  color: var(--secondary-color);
-  margin-bottom: 1rem;
 }
 
 @media (max-width: 600px) {
