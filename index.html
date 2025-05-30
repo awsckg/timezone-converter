@@ -4,202 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Time Zone Converter</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
-        :root {
-            --primary-color: #4a90e2;
-            --secondary-color: #2c3e50;
-            --accent-color: #e74c3c;
-            --background-color: #f5f6fa;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background: var(--background-color);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .container {
-            width: 90%;
-            max-width: 800px;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-            padding: 2rem;
-        }
-
-        .welcome-section {
-            text-align: center;
-            margin-bottom: 2rem;
-            padding: 1rem;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            border-radius: 12px;
-            color: white;
-        }
-
-        .welcome-section h1 {
-            font-size: 3rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .welcome-section p {
-            font-size: 1.3rem;
-            opacity: 0.9;
-        }
-
-        .converter {
-            background: white;
-            padding: 2rem;
-            border-radius: 12px;
-        }
-
-        .timezone-selector {
-            margin-bottom: 2rem;
-        }
-
-        .timezone-selector select {
-            width: 100%;
-            padding: 1rem;
-            border: 2px solid #e1e1e1;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            min-height: 150px;
-        }
-
-        .current-times {
-            margin-bottom: 2rem;
-        }
-
-        .current-times h3 {
-            color: var(--secondary-color);
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
-        }
-
-        .current-times-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-        }
-
-        .current-time-item {
-            background: white;
-            padding: 1rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .current-time-item h4 {
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
-            font-size: 1.1rem;
-        }
-
-        .input-section {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .time-inputs {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .input-group label {
-            color: var(--secondary-color);
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-
-        .input-group input {
-            padding: 0.8rem;
-            border: 2px solid #e1e1e1;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .input-group input:focus {
-            border-color: var(--primary-color);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
-        }
-
-        button {
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-        }
-
-        button:hover {
-            background: var(--secondary-color);
-            transform: translateY(-2px);
-        }
-
-        #results {
-            margin-top: 2rem;
-            padding: 1.5rem;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border-left: 4px solid var(--accent-color);
-            transition: opacity 0.3s ease;
-        }
-
-        .time-segment {
-            background: white;
-            padding: 1rem;
-            margin: 1rem 0;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .time-segment h3 {
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
-        }
-
-        .time-segment p {
-            margin: 0.5rem 0;
-            color: var(--secondary-color);
-        }
-
-        @media (max-width: 600px) {
-            .container {
-                padding: 1rem;
-            }
-            
-            .welcome-section h1 {
-                font-size: 2rem;
-            }
-
-            .time-inputs {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
@@ -210,10 +15,27 @@
         
         <div class="converter">
             <div class="input-section">
-                <div class="timezone-selector">
-                    <label for="timezones">Select Timezones:</label>
-                    <select id="timezones" multiple>
-                        <option value="IST" selected>IST (India)</option>
+                <div class="source-timezone">
+                    <label for="sourceTimezone">From Timezone:</label>
+                    <select id="sourceTimezone">
+                        <option value="IST">IST (India)</option>
+                        <option value="UTC">UTC</option>
+                        <option value="PST">PST (Pacific)</option>
+                        <option value="UK">UK (London)</option>
+                        <option value="AEST">AEST (Sydney)</option>
+                        <option value="SGT">SGT (Singapore)</option>
+                        <option value="CET">CET (Paris)</option>
+                        <option value="EET">EET (Helsinki)</option>
+                        <option value="WET">WET (Lisbon)</option>
+                    </select>
+                    <label for="sourceTime">Select Time:</label>
+                    <input type="datetime-local" id="sourceTime">
+                </div>
+
+                <div class="target-timezones">
+                    <label for="targetTimezones">To Timezones:</label>
+                    <select id="targetTimezones" multiple>
+                        <option value="IST">IST (India)</option>
                         <option value="UTC">UTC</option>
                         <option value="PST">PST (Pacific)</option>
                         <option value="UK">UK (London)</option>
@@ -225,17 +47,14 @@
                     </select>
                 </div>
 
-                <div class="current-times">
-                    <h3>Current Times:</h3>
-                    <div id="currentTimes" class="current-times-grid"></div>
-                </div>
-
-                <div class="time-inputs">
-                    <div class="input-group">
-                        <label for="startTime">📅 Start Time (IST)</label>
-                        <input type="datetime-local" id="startTime">
-                    </div>
-                    <div class="input-group">
-                        <label for="endTime">📅 End Time (IST)</label>
-                        <input type="datetime-local" id="endTime">
-                    </div>
+                <button onclick="convertTime()">Convert Time 🔄</button>
+            </div>
+            
+            <div id="results">
+                <!-- Results will be displayed here -->
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
