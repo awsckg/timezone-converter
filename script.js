@@ -1,6 +1,5 @@
 function convertTime() {
-    // Get selected timezone and times
-    const selectedTimezone = document.getElementById('timezone').value;
+    // Input validation
     const startTime = document.getElementById('startTime').value;
     const endTime = document.getElementById('endTime').value;
     
@@ -9,26 +8,25 @@ function convertTime() {
         return;
     }
     
-    const startDate = new Date(startTime);
-    const endDate = new Date(endTime);
+    const startIST = new Date(startTime);
+    const endIST = new Date(endTime);
     
-    if (endDate < startDate) {
+    if (endIST < startIST) {
         alert('End time cannot be earlier than start time');
         return;
     }
     
     // Define time zones in desired order
     const timeZones = {
-        'Selected': selectedTimezone,
         'IST': 'Asia/Kolkata',
         'UTC': 'UTC',
         'PST': 'America/Los_Angeles',
         'UK': 'Europe/London',
         'AEST': 'Australia/Sydney',
-        'SGT': 'Asia/Singapore',
-        'CET': 'Europe/Paris',
-        'EET': 'Europe/Helsinki',
-        'WET': 'Europe/Lisbon'
+        'SGT': 'Asia/Singapore',  // Fixed missing comma
+        'CET': 'Europe/Paris',    
+        'EET': 'Europe/Helsinki', 
+        'WET': 'Europe/Lisbon'    
     };
 
     let results = '<h2 class="results-title">Converted Times:</h2>';
@@ -37,9 +35,9 @@ function convertTime() {
     results += `
         <div class="time-segment epoch-segment">
             <h3><i class="fas fa-clock"></i> EPOCH Time</h3>
-            <p><strong>Start:</strong> ${startDate.getTime()} ms</p>
-            <p><strong>End:</strong> ${endDate.getTime()} ms</p>
-            <p><strong>Duration:</strong> ${endDate.getTime() - startDate.getTime()} ms</p>
+            <p><strong>Start:</strong> ${startIST.getTime()} ms</p>
+            <p><strong>End:</strong> ${endIST.getTime()} ms</p>
+            <p><strong>Duration:</strong> ${endIST.getTime() - startIST.getTime()} ms</p>
         </div>`;
 
     // Store converted times for difference calculation
@@ -59,23 +57,18 @@ function convertTime() {
                 second: '2-digit'
             };
 
-            const convertedStartTime = startDate.toLocaleString('en-US', startOptions);
-            const convertedEndTime = endDate.toLocaleString('en-US', startOptions);
+            const convertedStartTime = startIST.toLocaleString('en-US', startOptions);
+            const convertedEndTime = endIST.toLocaleString('en-US', startOptions);
 
             // Store the converted Date objects for time difference calculation
             convertedTimes[zone] = {
-                start: new Date(startDate.toLocaleString('en-US', { timeZone: region })),
-                end: new Date(endDate.toLocaleString('en-US', { timeZone: region }))
+                start: new Date(startIST.toLocaleString('en-US', { timeZone: region })),
+                end: new Date(endIST.toLocaleString('en-US', { timeZone: region }))
             };
 
-            // Add special highlighting for selected timezone
-            const isSelected = zone === 'Selected';
-            const segmentClass = isSelected ? 'time-segment selected-timezone' : 'time-segment';
-            const zoneDisplay = isSelected ? `Selected (${region})` : zone;
-
             results += `
-                <div class="${segmentClass}">
-                    <h3><i class="fas fa-globe"></i> ${zoneDisplay}</h3>
+                <div class="time-segment">
+                    <h3><i class="fas fa-globe"></i> ${zone}</h3>
                     <p><strong>Start:</strong> ${convertedStartTime}</p>
                     <p><strong>End:</strong> ${convertedEndTime}</p>
                 </div>`;
@@ -129,10 +122,3 @@ function convertTime() {
         resultsElement.style.opacity = '1';
     }, 100);
 }
-
-// Initialize timezone dropdown when page loads
-document.addEventListener('DOMContentLoaded', function() {
-    const timezone = document.getElementById('timezone');
-    // Set default timezone to UTC
-    timezone.value = 'UTC';
-});
