@@ -1,39 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Time Zone Converter</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 </head>
 <body>
     <div class="container">
         <div class="welcome-section">
-            <h1>⏰ Time Zone Converter</h1>
-            <p>Convert times between different time zones effortlessly</p>
+            <h1>🌐 Time Zone Converter</h1>
+            <p>Convert times across multiple time zones and see the current time instantly!</p>
         </div>
-        
+
         <div class="converter">
             <div class="input-section">
+                <div class="input-group">
+                    <label for="baseTimeZone">🌎 Select Source Time Zone</label>
+                    <select id="baseTimeZone"></select>
+                </div>
                 <div class="time-inputs">
                     <div class="input-group">
-                        <label for="startTime">📅 Start Time (IST)</label>
-                        <input type="datetime-local" id="startTime">
+                        <label for="startTime">📅 Start Time</label>
+                        <input type="datetime-local" id="startTime" />
                     </div>
                     <div class="input-group">
-                        <label for="endTime">📅 End Time (IST)</label>
-                        <input type="datetime-local" id="endTime">
+                        <label for="endTime">📅 End Time</label>
+                        <input type="datetime-local" id="endTime" />
                     </div>
                 </div>
                 <button onclick="convertTime()">
-                    <span>Convert Time</span> 🔄
+                    🔄 Convert Time
                 </button>
             </div>
-            
-            <div id="results">
-                <!-- Results will be displayed here -->
-            </div>
+
+            <div id="results"></div>
         </div>
     </div>
     <script src="script.js"></script>
