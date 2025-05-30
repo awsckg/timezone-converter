@@ -1,3 +1,6 @@
+Here's the complete HTML file:
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -115,10 +118,6 @@
             box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
         }
 
-        .input-group select:hover {
-            border-color: var(--primary-color);
-        }
-
         button {
             background: var(--primary-color);
             color: white;
@@ -220,25 +219,31 @@
         <div class="converter">
             <div class="input-section">
                 <div class="time-inputs">
-                    <div class="input-group">
+                    <div class="input-group" style="grid-column: 1 / -1;">
                         <label for="timezone">🌍 Select Timezone</label>
                         <select id="timezone">
-                            <option value="Asia/Kolkata">IST (India)</option>
                             <option value="UTC">UTC</option>
+                            <option value="Asia/Kolkata">IST (India)</option>
+                            <option value="America/New_York">EST (New York)</option>
                             <option value="America/Los_Angeles">PST (Los Angeles)</option>
-                            <option value="Europe/London">UK (London)</option>
-                            <option value="Australia/Sydney">AEST (Sydney)</option>
-                            <option value="Asia/Singapore">SGT (Singapore)</option>
-                            <option value="Europe/Paris">CET (Paris)</option>
-                            <option value="Europe/Helsinki">EET (Helsinki)</option>
-                            <option value="Europe/Lisbon">WET (Lisbon)</option>
+                            <option value="Europe/London">GMT (London)</option>
                         </select>
                     </div>
-                    <div class="datetime-inputs">
-                        <div class="input-group">
-                            <label for="startTime">📅 Start Time</label>
-                            <input type="datetime-local" id="startTime">
-                        </div>
-                        <div class="input-group">
-                            <label for="endTime">📅 End Time</label>
-                            <input type="datetime-local
+                    <div class="input-group" style="grid-column: span 1;">
+                        <label for="startTime">📅 Start Time</label>
+                        <input type="datetime-local" id="startTime">
+                    </div>
+                    <div class="input-group" style="grid-column: span 1;">
+                        <label for="endTime">📅 End Time</label>
+                        <input type="datetime-local" id="endTime">
+                    </div>
+                </div>
+                <button onclick="convertTime()">
+                    <span>Convert Time</span> 🔄
+                </button>
+            </div>
+            
+            <div id="results">
+                <!-- Results will be displayed here -->
+            </div>
+        </div>
