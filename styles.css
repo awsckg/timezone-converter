@@ -18,6 +18,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 20px;
 }
 
 .container {
@@ -32,7 +33,7 @@ body {
 .welcome-section {
     text-align: center;
     margin-bottom: 2rem;
-    padding: 1rem;
+    padding: 1.5rem;
     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
     border-radius: 12px;
     color: white;
@@ -50,76 +51,29 @@ body {
 
 .converter {
     background: white;
-    padding: 2rem;
+    padding: 1rem;
     border-radius: 12px;
-}
-
-.timezone-selector {
-    margin-bottom: 2rem;
-}
-
-.timezone-selector select {
-    width: 100%;
-    padding: 1rem;
-    border: 2px solid #e1e1e1;
-    border-radius: 8px;
-    font-size: 1.1rem;
-    min-height: 150px;
-}
-
-.current-times {
-    margin-bottom: 2rem;
-}
-
-.current-times h3 {
-    color: var(--secondary-color);
-    margin-bottom: 1rem;
-    font-size: 1.3rem;
-}
-
-.current-times-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-}
-
-.current-time-item {
-    background: white;
-    padding: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.current-time-item h4 {
-    color: var(--primary-color);
-    margin-bottom: 0.5rem;
-    font-size: 1.1rem;
 }
 
 .input-section {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 2rem;
 }
 
-.time-inputs {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-}
-
-.input-group {
+.source-timezone,
+.target-timezones {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 1rem;
 }
 
-.input-group label {
-    color: var(--secondary-color);
+label {
     font-weight: 600;
+    color: var(--secondary-color);
 }
 
-.input-group input {
+select, input {
     padding: 0.8rem;
     border: 2px solid #e1e1e1;
     border-radius: 8px;
@@ -127,10 +81,15 @@ body {
     transition: all 0.3s ease;
 }
 
-.input-group input:focus {
+select:focus, input:focus {
     border-color: var(--primary-color);
     outline: none;
     box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+select[multiple] {
+    min-height: 150px;
+    width: 100%;
 }
 
 button {
@@ -143,6 +102,7 @@ button {
     cursor: pointer;
     transition: all 0.3s ease;
     font-weight: 600;
+    margin-top: 1rem;
 }
 
 button:hover {
@@ -152,25 +112,26 @@ button:hover {
 
 #results {
     margin-top: 2rem;
-    padding: 1.5rem;
-    background: #f8f9fa;
-    border-radius: 8px;
-    border-left: 4px solid var(--accent-color);
+    opacity: 0;
     transition: opacity 0.3s ease;
 }
 
-.time-segment {
-    background: white;
+.time-result {
+    background: #f8f9fa;
     padding: 1rem;
     margin: 1rem 0;
     border-radius: 8px;
+    border-left: 4px solid var(--primary-color);
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.time-segment h3 {
-    color: var(--primary-color);
+.time-result h3 {
+    color: var(--secondary-color);
     margin-bottom: 0.5rem;
 }
 
-.time-segment p {
+.time-result p {
+    color: var(--primary-color);
+    font-size: 1.1rem;
     margin: 0.5rem 0;
+}
