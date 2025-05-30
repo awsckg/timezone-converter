@@ -91,27 +91,6 @@ body {
     box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
 }
 
-/* New styles for select element */
-.input-group select {
-    padding: 0.8rem;
-    border: 2px solid #e1e1e1;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    width: 100%;
-    background-color: white;
-}
-
-.input-group select:focus {
-    border-color: var(--primary-color);
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
-}
-
-.input-group select:hover {
-    border-color: var(--primary-color);
-}
-
 button {
     background: var(--primary-color);
     color: white;
