@@ -1,4 +1,64 @@
-/* [Previous root variables and general styles remain the same until .time-inputs] */
+:root {
+    --primary-color: #4a90e2;
+    --secondary-color: #2c3e50;
+    --accent-color: #e74c3c;
+    --background-color: #f5f6fa;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: var(--background-color);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    width: 90%;
+    max-width: 800px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    padding: 2rem;
+}
+
+.welcome-section {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border-radius: 12px;
+    color: white;
+}
+
+.welcome-section h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.welcome-section p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+.converter {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+}
+
+.input-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
 
 .time-inputs {
     display: flex;
@@ -7,68 +67,124 @@
     align-items: center;
 }
 
-/* Add new datetime group styles */
-.datetime-group {
+.timezone-wrapper {
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 1rem;
+}
+
+.datetime-inputs {
     display: flex;
     justify-content: space-between;
     gap: 1.5rem;
     width: 100%;
 }
 
-.datetime-item {
+.datetime-inputs .input-group {
     flex: 1;
-    text-align: center;
 }
 
-.datetime-item .label {
+.input-group {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
     gap: 0.5rem;
-    margin-bottom: 0.5rem;
+}
+
+.input-group label {
     color: var(--secondary-color);
     font-weight: 600;
 }
 
-.datetime-item .format {
-    color: #666;
-    font-size: 0.9rem;
-    margin-top: 0.25rem;
-}
-
-.datetime-item input[type="datetime-local"] {
-    height: 50px;
-    width: 100%;
-    padding: 0.8rem 0.5rem;
+.input-group input {
+    padding: 0.8rem;
     border: 2px solid #e1e1e1;
     border-radius: 8px;
     font-size: 1rem;
     transition: all 0.3s ease;
-    -webkit-appearance: none;
 }
 
-.datetime-item input[type="datetime-local"]:focus {
+.input-group input:focus {
     border-color: var(--primary-color);
     outline: none;
     box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
 }
 
-/* [Rest of the existing styles remain the same] */
-
-@media (max-width: 600px) {
-    .container {
-        padding: 1rem;
-    }
-    
-    .welcome-section h1 {
-        font-size: 2rem;
-    }
-
-    .datetime-inputs {
-        flex-direction: column;
-    }
-
-    .datetime-group {
-        flex-direction: column;
-    }
+.input-group input[type="datetime-local"] {
+    height: 50px;
+    min-width: 100%;
+    padding: 0.8rem 0.5rem;
+    -webkit-appearance: none;
 }
+
+.input-group select {
+    padding: 0.8rem;
+    border: 2px solid #e1e1e1;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    width: 100%;
+    background-color: white;
+}
+
+.input-group select:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.timezone-select {
+    padding: 0.8rem;
+    border: 2px solid #e1e1e1;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    width: 100%;
+    background-color: white;
+    color: var(--secondary-color);
+}
+
+.timezone-select:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.timezone-select:hover {
+    border-color: var(--primary-color);
+}
+
+.timezone-select option {
+    padding: 8px;
+    color: var(--secondary-color);
+}
+
+button {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+button:hover {
+    background: var(--secondary-color);
+    transform: translateY(-2px);
+}
+
+#results {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid var(--accent-color);
+    transition: opacity 0.3s ease;
+}
+
+.time-segment {
+    background: white;
+    padding: 1rem;
+    margin: 1
