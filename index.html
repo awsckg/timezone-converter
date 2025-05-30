@@ -1,60 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Time Zone Converter</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/date-fns@2.30.0"></script>
-    <script src="https://cdn.jsdelivr.net/npm/date-fns-tz@2.0.0"></script>
-    <script src="script.js" defer></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Time Zone Converter</title>
+  <style>
+    body {
+      background: #f5f6fa;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 2rem;
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      max-width: 800px;
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      width: 100%;
+    }
+    .welcome-section {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    h1 {
+      font-size: 2.5rem;
+    }
+    label {
+      font-weight: bold;
+    }
+    .input-group {
+      margin-bottom: 1rem;
+    }
+    input, select {
+      width: 100%;
+      padding: 0.8rem;
+      margin-top: 0.3rem;
+    }
+    button {
+      background: #4a90e2;
+      color: white;
+      padding: 1rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .results-title {
+      margin-top: 2rem;
+      color: #2c3e50;
+    }
+    .time-segment {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: #f9f9f9;
+      border-left: 4px solid #4a90e2;
+    }
+    .epoch-segment {
+      border-left: 4px solid #e74c3c;
+    }
+  </style>
+
+  <!-- Add date-fns and date-fns-tz -->
+  <script src="https://cdn.jsdelivr.net/npm/date-fns@2.30.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/date-fns-tz@2.0.0"></script>
 </head>
 <body>
-    <div class="container">
-        <div class="welcome-section">
-            <h1>⏰ Time Zone Converter</h1>
-            <p>Convert times between different time zones effortlessly</p>
-        </div>
-        
-        <div class="converter">
-            <div class="input-section">
-                <div class="time-inputs">
-                    <div class="input-group">
-                        <label for="inputTimeZone">🌐 Input Time Zone</label>
-                        <select id="inputTimeZone">
-                            <option value="Asia/Kolkata">IST (Asia/Kolkata)</option>
-                            <option value="UTC">UTC</option>
-                            <option value="America/Los_Angeles">PST (America/Los_Angeles)</option>
-                            <option value="Europe/London">UK (Europe/London)</option>
-                            <option value="Australia/Sydney">AEST (Australia/Sydney)</option>
-                            <option value="Asia/Singapore">SGT (Asia/Singapore)</option>
-                            <option value="Europe/Paris">CET (Europe/Paris)</option>
-                            <option value="Europe/Helsinki">EET (Europe/Helsinki)</option>
-                            <option value="Europe/Lisbon">WET (Europe/Lisbon)</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label for="startTime">📅 Start Time</label>
-                        <input type="datetime-local" id="startTime">
-                    </div>
-                    <div class="input-group">
-                        <label for="endTime">📅 End Time</label>
-                        <input type="datetime-local" id="endTime">
-                    </div>
-                </div>
-                <button onclick="convertTime()">
-                    <span>Convert Time</span> 🔄
-                </button>
-            </div>
-            
-            <div id="currentTimeDisplay" class="current-time">
-                <!-- Current time will be displayed here -->
-            </div>
-
-            <div id="results">
-                <!-- Results will be displayed here -->
-            </div>
-        </div>
+  <div class="container">
+    <div class="welcome-section">
+      <h1>⏰ Time Zone Converter</h1>
+      <p>Convert times between different time zones effortlessly</p>
     </div>
+
+    <div class="input-group">
+      <label for="inputTimeZone">🌐 Input Time Zone</label>
+      <select id="inputTimeZone">
+        <option value="Asia/Kolkata">IST (Asia/Kolkata)</option>
+        <option value="UTC">UTC</option>
+        <option value="America/Los_Angeles">PST (America/Los_Angeles)</option>
+        <option value="Europe/London">UK (Europe/London)</option>
+        <option value="Australia/Sydney">AEST (Australia/Sydney)</option>
+        <option value="Asia/Singapore">SGT (Asia/Singapore)</option>
+        <option value="Europe/Paris">CET (Europe/Paris)</option>
+        <option value="Europe/Helsinki">EET (Europe/Helsinki)</option>
+        <option value="Europe/Lisbon">WET (Europe/Lisbon)</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <label for="startTime">📅 Start Time</label>
+      <input type="datetime-local" id="startTime" />
+    </div>
+    <div class="input-group">
+      <label for="endTime">📅 End Time</label>
+      <input type="datetime-local" id="endTime" />
+    </div>
+    <button onclick="convertTime()">Convert Time 🔄</button>
+
+    <div id="results"></div>
+  </div>
+
+  <script>
+    function convertTime() {
+      const startTimeInput = document.getElementById('startTime').value;
+      const endTimeInput = document.getElementById('endTime').value;
+      const inputTimeZone = document.getElementById('inputTimeZone').value;
+
+      if (!startTimeInput || !endTimeInput) {
+        alert('Please select both start and end times');
+        return;
+      }
+
+      const startUTC = dateFnsTz.zonedTimeToUtc(startTimeInput, inputTimeZone);
+      const endUTC = dateFnsTz.zonedTimeToUtc(endTimeInput, inputTimeZone);
+
+      if (endUTC < startUTC) {
+        alert('End time cannot be earlier than start time');
+        return;
+      }
+
+      const timeZones = {
+        'IST': 'Asia/Kolkata',
+        'UTC': 'UTC',
+        'PST': 'America/Los_Angeles',
+        'UK': 'Europe/London',
+        'AEST': 'Australia/Sydney',
+        'SGT': 'Asia/Singapore',
+        'CET': 'Europe/Paris',
+        'EET': 'Europe/Helsinki',
+        'WET': 'Europe/Lisbon'
+      };
+
+      let results = '<h2 class="results-title">Converted Times:</h2>';
+
+      // Epoch Time
+      results += `
+        <div class="time-segment epoch-segment">
+          <h3>🕐 EPOCH Time</h3>
+          <p><strong>Start:</strong> ${startUTC.getTime()} ms</p>
+          <p><strong>End:</strong> ${endUTC.getTime()} ms</p>
+          <p><strong>Duration:</strong> ${(endUTC.getTime() - startUTC.getTime()) / 1000} seconds</p>
+        </div>`;
+
+      for (let [label, zone] of Object.entries(timeZones)) {
+        const startZoned = dateFnsTz.utcToZonedTime(startUTC, zone);
+        const endZoned = dateFnsTz.utcToZonedTime(endUTC, zone);
+        const formatStr = "yyyy-MM-dd hh:mm:ss a";
+
+        const startFormatted = dateFnsTz.format(startZoned, formatStr, { timeZone: zone });
+        const endFormatted = dateFnsTz.format(endZoned, formatStr, { timeZone: zone });
+
+        results += `
+          <div class="time-segment">
+            <h3>${label} (${zone})</h3>
+            <p><strong>Start:</strong> ${startFormatted}</p>
+            <p><strong>End:</strong> ${endFormatted}</p>
+          </div>`;
+      }
+
+      document.getElementById('results').innerHTML = results;
+    }
+  </script>
 </body>
 </html>
