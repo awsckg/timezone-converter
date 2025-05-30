@@ -74,10 +74,14 @@ body {
 }
 
 .datetime-inputs {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    display: flex;
+    justify-content: space-between;
     gap: 1.5rem;
     width: 100%;
+}
+
+.datetime-inputs .input-group {
+    flex: 1;
 }
 
 .input-group {
@@ -225,5 +229,9 @@ button:hover {
     
     .welcome-section h1 {
         font-size: 2rem;
+    }
+
+    .datetime-inputs {
+        flex-direction: column;
     }
 }
