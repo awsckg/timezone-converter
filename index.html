@@ -69,8 +69,8 @@
         }
 
         .time-inputs {
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1.5rem;
         }
 
@@ -113,6 +113,10 @@
             border-color: var(--primary-color);
             outline: none;
             box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+
+        .input-group select:hover {
+            border-color: var(--primary-color);
         }
 
         button {
@@ -195,12 +199,6 @@
             margin-bottom: 1rem;
         }
 
-        .datetime-inputs {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-        }
-
         @media (max-width: 600px) {
             .container {
                 padding: 1rem;
@@ -208,10 +206,6 @@
             
             .welcome-section h1 {
                 font-size: 2rem;
-            }
-
-            .datetime-inputs {
-                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -246,3 +240,5 @@
                             <input type="datetime-local" id="startTime">
                         </div>
                         <div class="input-group">
+                            <label for="endTime">📅 End Time</label>
+                            <input type="datetime-local
