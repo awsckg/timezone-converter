@@ -8,16 +8,15 @@ function convertTime() {
         return;
     }
 
-    // Convert input times to UTC based on selected time zone
-    const startUTC = zonedTimeToUtc(startTimeInput, inputTimeZone);
-    const endUTC = zonedTimeToUtc(endTimeInput, inputTimeZone);
+    // Convert input times to UTC
+    const startUTC = dateFnsTz.zonedTimeToUtc(startTimeInput, inputTimeZone);
+    const endUTC = dateFnsTz.zonedTimeToUtc(endTimeInput, inputTimeZone);
 
     if (endUTC < startUTC) {
         alert('End time cannot be earlier than start time');
         return;
     }
 
-    // Define time zones
     const timeZones = {
         'IST': 'Asia/Kolkata',
         'UTC': 'UTC',
@@ -35,25 +34,27 @@ function convertTime() {
     // Epoch Time
     results += `
         <div class="time-segment epoch-segment">
-            <h3><i class="fas fa-clock"></i> EPOCH Time</h3>
+            <h3>🕐 EPOCH Time</h3>
             <p><strong>Start:</strong> ${startUTC.getTime()} ms</p>
             <p><strong>End:</strong> ${endUTC.getTime()} ms</p>
-            <p><strong>Duration:</strong> ${endUTC.getTime() - startUTC.getTime()} ms</p>
+            <p><strong>Duration:</strong> ${(endUTC.getTime() - startUTC.getTime()) / 1000} seconds</p>
         </div>`;
 
-    // Store converted times
-    let convertedTimes = {};
+    for (let [label, zone] of Object.entries(timeZones)) {
+        const startZoned = dateFnsTz.utcToZonedTime(startUTC, zone);
+        const endZoned = dateFnsTz.utcToZonedTime(endUTC, zone);
 
-    for (let [zone, region] of Object.entries(timeZones)) {
-        try {
-            const startOptions = {
-                timeZone: region,
-                hour12: true,
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2
-::contentReference[oaicite:27]{index=27}
- 
+        const formatStr = "yyyy-MM-dd hh:mm:ss a";
+        const startFormatted = dateFnsTz.format(startZoned, formatStr, { timeZone: zone });
+        const endFormatted = dateFnsTz.format(endZoned, formatStr, { timeZone: zone });
+
+        results += `
+            <div class="time-segment">
+                <h3>${label} (${zone})</h3>
+                <p><strong>Start:</strong> ${startFormatted}</p>
+                <p><strong>End:</strong> ${endFormatted}</p>
+            </div>`;
+    }
+
+    document.getElementById('results').innerHTML = results;
+}
