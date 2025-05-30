@@ -1,7 +1,22 @@
-/* Add these new styles to your existing CSS file */
+/* [Previous CSS remains the same until .input-group input:focus] */
 
-/* Style for the timezone select dropdown */
+.input-group input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+/* Add these new styles here */
+.input-group input[type="datetime-local"] {
+    height: 50px;
+    min-width: 100%;
+    padding: 0.8rem 0.5rem;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+}
+
 .input-group select {
+    height: 50px;
     padding: 0.8rem;
     border: 2px solid #e1e1e1;
     border-radius: 8px;
@@ -9,7 +24,6 @@
     transition: all 0.3s ease;
     width: 100%;
     background-color: white;
-    height: 45px;
 }
 
 .input-group select:focus {
@@ -18,20 +32,9 @@
     box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
 }
 
-/* Adjust datetime input height and padding */
-.input-group input[type="datetime-local"] {
-    height: 45px;
-    min-width: 100%;
-}
-
-/* Style for highlighting selected timezone */
 .selected-timezone {
     border-left: 4px solid var(--primary-color) !important;
     background-color: rgba(74, 144, 226, 0.05);
 }
 
-/* Adjust grid layout for three inputs */
-.time-inputs {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 2rem;
-}
+/* [Rest of the existing CSS remains the same] */
