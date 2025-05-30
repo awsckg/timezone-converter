@@ -99,22 +99,6 @@
             box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
         }
 
-        .input-group select {
-            padding: 0.8rem;
-            border: 2px solid #e1e1e1;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            width: 100%;
-            background-color: white;
-        }
-
-        .input-group select:focus {
-            border-color: var(--primary-color);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
-        }
-
         button {
             background: var(--primary-color);
             color: white;
@@ -217,21 +201,11 @@
             <div class="input-section">
                 <div class="time-inputs">
                     <div class="input-group">
-                        <label for="timezone">🌍 Select Timezone</label>
-                        <select id="timezone">
-                            <option value="UTC">UTC</option>
-                            <option value="Asia/Kolkata">IST (India)</option>
-                            <option value="America/New_York">EST (New York)</option>
-                            <option value="America/Los_Angeles">PST (Los Angeles)</option>
-                            <option value="Europe/London">GMT (London)</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label for="startTime">📅 Start Time</label>
+                        <label for="startTime">📅 Start Time (IST)</label>
                         <input type="datetime-local" id="startTime">
                     </div>
                     <div class="input-group">
-                        <label for="endTime">📅 End Time</label>
+                        <label for="endTime">📅 End Time (IST)</label>
                         <input type="datetime-local" id="endTime">
                     </div>
                 </div>
@@ -247,3 +221,4 @@
     </div>
     <script src="script.js"></script>
 </body>
+</html>
