@@ -47,12 +47,12 @@
         }
 
         .welcome-section h1 {
-            font-size: 2.5rem;
+            font-size: 3rem;
             margin-bottom: 0.5rem;
         }
 
         .welcome-section p {
-            font-size: 1.1rem;
+            font-size: 1.3rem;
             opacity: 0.9;
         }
 
@@ -60,6 +60,48 @@
             background: white;
             padding: 2rem;
             border-radius: 12px;
+        }
+
+        .timezone-selector {
+            margin-bottom: 2rem;
+        }
+
+        .timezone-selector select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            min-height: 150px;
+        }
+
+        .current-times {
+            margin-bottom: 2rem;
+        }
+
+        .current-times h3 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .current-times-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .current-time-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .current-time-item h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
         }
 
         .input-section {
@@ -70,8 +112,8 @@
 
         .time-inputs {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
         }
 
         .input-group {
@@ -83,6 +125,7 @@
         .input-group label {
             color: var(--secondary-color);
             font-weight: 600;
+            font-size: 1.1rem;
         }
 
         .input-group input {
@@ -143,42 +186,6 @@
             color: var(--secondary-color);
         }
 
-        .epoch-segment {
-            background: #f8f9fa;
-            border-left: 4px solid var(--accent-color);
-        }
-
-        .time-differences {
-            margin-top: 2rem;
-        }
-
-        .time-differences table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
-        }
-
-        .time-differences th,
-        .time-differences td {
-            padding: 0.75rem;
-            text-align: left;
-            border-bottom: 1px solid #e1e1e1;
-        }
-
-        .time-differences th {
-            background: var(--primary-color);
-            color: white;
-        }
-
-        .time-differences tr:hover {
-            background: #f5f5f5;
-        }
-
-        .results-title {
-            color: var(--secondary-color);
-            margin-bottom: 1rem;
-        }
-
         @media (max-width: 600px) {
             .container {
                 padding: 1rem;
@@ -186,6 +193,10 @@
             
             .welcome-section h1 {
                 font-size: 2rem;
+            }
+
+            .time-inputs {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -199,6 +210,26 @@
         
         <div class="converter">
             <div class="input-section">
+                <div class="timezone-selector">
+                    <label for="timezones">Select Timezones:</label>
+                    <select id="timezones" multiple>
+                        <option value="IST" selected>IST (India)</option>
+                        <option value="UTC">UTC</option>
+                        <option value="PST">PST (Pacific)</option>
+                        <option value="UK">UK (London)</option>
+                        <option value="AEST">AEST (Sydney)</option>
+                        <option value="SGT">SGT (Singapore)</option>
+                        <option value="CET">CET (Paris)</option>
+                        <option value="EET">EET (Helsinki)</option>
+                        <option value="WET">WET (Lisbon)</option>
+                    </select>
+                </div>
+
+                <div class="current-times">
+                    <h3>Current Times:</h3>
+                    <div id="currentTimes" class="current-times-grid"></div>
+                </div>
+
                 <div class="time-inputs">
                     <div class="input-group">
                         <label for="startTime">📅 Start Time (IST)</label>
@@ -208,17 +239,3 @@
                         <label for="endTime">📅 End Time (IST)</label>
                         <input type="datetime-local" id="endTime">
                     </div>
-                </div>
-                <button onclick="convertTime()">
-                    <span>Convert Time</span> 🔄
-                </button>
-            </div>
-            
-            <div id="results">
-                <!-- Results will be displayed here -->
-            </div>
-        </div>
-    </div>
-    <script src="script.js"></script>
-</body>
-</html>
