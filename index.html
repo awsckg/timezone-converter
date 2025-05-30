@@ -28,4 +28,26 @@
               <option value="Asia/Singapore">SGT (Asia/Singapore)</option>
               <option value="Europe/Paris">CET (Europe/Paris)</option>
               <option value="Europe/Helsinki">EET (Europe/Helsinki)</option>
-              <option value="Europe/Lisbon">WET (Europe/L
+              <option value="Europe/Lisbon">WET (Europe/Lisbon)</option>
+            </select>
+          </div>
+
+          <div class="input-group">
+            <label for="startTime">📅 Start Time</label>
+            <input type="datetime-local" id="startTime" />
+          </div>
+
+          <div class="input-group">
+            <label for="endTime">📅 End Time</label>
+            <input type="datetime-local" id="endTime" />
+          </div>
+        </div>
+
+        <button onclick="convertTime()">Convert Time 🔄</button>
+      </div>
+
+      <div id="results"></div>
+    </div>
+  </div>
+</body>
+</html>
