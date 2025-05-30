@@ -1,3 +1,46 @@
+// Function to update current times
+function updateCurrentTimes() {
+    const timeZones = {
+        'IST': 'Asia/Kolkata',
+        'UTC': 'UTC',
+        'PST': 'America/Los_Angeles',
+        'UK': 'Europe/London',
+        'AEST': 'Australia/Sydney',
+        'SGT': 'Asia/Singapore',
+        'CET': 'Europe/Paris',
+        'EET': 'Europe/Helsinki',
+        'WET': 'Europe/Lisbon'
+    };
+
+    const currentTimesDiv = document.getElementById('currentTimes');
+    currentTimesDiv.innerHTML = '';
+
+    for (let [zone, region] of Object.entries(timeZones)) {
+        const now = new Date();
+        const options = {
+            timeZone: region,
+            hour12: true,
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        };
+
+        const timeString = now.toLocaleString('en-US', options);
+        
+        const timeItem = document.createElement('div');
+        timeItem.className = 'current-time-item';
+        timeItem.innerHTML = `
+            <h4>${zone}</h4>
+            <p>${timeString}</p>
+        `;
+        currentTimesDiv.appendChild(timeItem);
+    }
+}
+
+// Update times every second
+setInterval(updateCurrentTimes, 1000);
+updateCurrentTimes(); // Initial call
+
 function convertTime() {
     // Input validation
     const startTime = document.getElementById('startTime').value;
@@ -15,19 +58,35 @@ function convertTime() {
         alert('End time cannot be earlier than start time');
         return;
     }
+
+    // Get selected timezones
+    const selectedTimezones = Array.from(document.getElementById('timezones').selectedOptions)
+        .map(option => option.value);
+
+    if (selectedTimezones.length === 0) {
+        alert('Please select at least one timezone');
+        return;
+    }
     
-    // Define time zones in desired order
+    // Filter timeZones object based on selection
     const timeZones = {
         'IST': 'Asia/Kolkata',
         'UTC': 'UTC',
         'PST': 'America/Los_Angeles',
         'UK': 'Europe/London',
         'AEST': 'Australia/Sydney',
-        'SGT': 'Asia/Singapore',  // Fixed missing comma
-        'CET': 'Europe/Paris',    
-        'EET': 'Europe/Helsinki', 
-        'WET': 'Europe/Lisbon'    
+        'SGT': 'Asia/Singapore',
+        'CET': 'Europe/Paris',
+        'EET': 'Europe/Helsinki',
+        'WET': 'Europe/Lisbon'
     };
+
+    const selectedTimeZonesObj = {};
+    selectedTimezones.forEach(zone => {
+        if (timeZones[zone]) {
+            selectedTimeZonesObj[zone] = timeZones[zone];
+        }
+    });
 
     let results = '<h2 class="results-title">Converted Times:</h2>';
     
@@ -44,7 +103,7 @@ function convertTime() {
     let convertedTimes = {};
 
     // Add segments for each timezone
-    for (let [zone, region] of Object.entries(timeZones)) {
+    for (let [zone, region] of Object.entries(selectedTimeZonesObj)) {
         try {
             const startOptions = {
                 timeZone: region,
@@ -96,7 +155,7 @@ function convertTime() {
             <tbody>`;
 
     // Calculate time differences between zones
-    const zones = Object.keys(timeZones);
+    const zones = Object.keys(selectedTimeZonesObj);
     for (let i = 0; i < zones.length; i++) {
         for (let j = i + 1; j < zones.length; j++) {
             const zone1 = zones[i];
