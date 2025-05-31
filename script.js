@@ -15,39 +15,38 @@ function convertTime() {
 
   // Helper: parse date-time string in a specific IANA time zone to UTC Date object
   function parseZonedDateTime(dateTimeStr, timeZone) {
-    const [dateStr, timeStr] = dateTimeStr.split('T');
-    const [year, month, day] = dateStr.split('-').map(Number);
-    const [hour, minute, second] = timeStr.split(':').map(Number);
+  const [dateTimeInput] = dateTimeStr.split('T');
+  const [year, month, day] = dateTimeInput.split('-').map(Number);
+  const [hour, minute] = dateTimeStr.split('T')[1].split(':').map(Number);
 
-    const dt = new Date(Date.UTC(year, month - 1, day, hour, minute, second));
-    const dtFormat = new Intl.DateTimeFormat('en-US', {
-      timeZone,
-      hour12: false,
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-    });
+  const dt = new Date(Date.UTC(year, month - 1, day, hour, minute));
+  const dtFormat = new Intl.DateTimeFormat('en-US', {
+    timeZone,
+    hour12: false,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  });
 
-    const formattedTime = dtFormat.format(dt);
-    const [formattedDate, formattedTime] = formattedTime.split(', ');
-    const [formattedYear, formattedMonth, formattedDay] = formattedDate.split('/');
-    const [formattedHour, formattedMinute, formattedSecond] = formattedTime.split(':');
+  const formattedTime = dtFormat.format(dt);
+  const [formattedDate, formattedTime] = formattedTime.split(', ');
+  const [formattedYear, formattedMonth, formattedDay] = formattedDate.split('/');
+  const [formattedHour, formattedMinute, formattedSecond] = formattedTime.split(':');
 
-    return new Date(
-      Date.UTC(
-        Number(formattedYear),
-        Number(formattedMonth) - 1,
-        Number(formattedDay),
-        Number(formattedHour),
-        Number(formattedMinute),
-        Number(formattedSecond)
-      )
-    );
-  }
-
+  return new Date(
+    Date.UTC(
+      Number(formattedYear),
+      Number(formattedMonth) - 1,
+      Number(formattedDay),
+      Number(formattedHour),
+      Number(formattedMinute),
+      Number(formattedSecond)
+    )
+  );
+}
   const startUTC = parseZonedDateTime(startTimeInput, inputTimeZone);
   const endUTC = parseZonedDateTime(endTimeInput, inputTimeZone);
 
