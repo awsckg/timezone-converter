@@ -15,16 +15,11 @@ function convertTime() {
 
   // Helper: parse date-time string in a specific IANA time zone to UTC Date object
   function parseZonedDateTime(dateTimeStr, timeZone) {
-    // Create a Date object with the given string as if it's in timeZone
-    const [date, time] = dateTimeStr.split('T');
-    const [year, month, day] = date.split('-').map(Number);
-    const [hour, minute] = time.split(':').map(Number);
+    const [dateStr, timeStr] = dateTimeStr.split('T');
+    const [year, month, day] = dateStr.split('-').map(Number);
+    const [hour, minute, second] = timeStr.split(':').map(Number);
 
-    // Get the offset in minutes for this timezone at this date
-    const dt = new Date(Date.UTC(year, month - 1, day, hour, minute));
-    // We want to get the equivalent UTC time for this local time in that time zone.
-    // Use Intl.DateTimeFormat with timeZone and get offset by comparing formatted time.
-
+    const dt = new Date(Date.UTC(year, month - 1, day, hour, minute, second));
     const dtFormat = new Intl.DateTimeFormat('en-US', {
       timeZone,
       hour12: false,
@@ -36,32 +31,21 @@ function convertTime() {
       second: '2-digit',
     });
 
-    // Format the Date as if it's in the target timezone
-    const parts = dtFormat.formatToParts(dt);
-    let tzYear, tzMonth, tzDay, tzHour, tzMinute, tzSecond;
+    const formattedTime = dtFormat.format(dt);
+    const [formattedDate, formattedTime] = formattedTime.split(', ');
+    const [formattedYear, formattedMonth, formattedDay] = formattedDate.split('/');
+    const [formattedHour, formattedMinute, formattedSecond] = formattedTime.split(':');
 
-    for (const part of parts) {
-      if (part.type === 'year') tzYear = Number(part.value);
-      else if (part.type === 'month') tzMonth = Number(part.value);
-      else if (part.type === 'day') tzDay = Number(part.value);
-      else if (part.type === 'hour') tzHour = Number(part.value);
-      else if (part.type === 'minute') tzMinute = Number(part.value);
-      else if (part.type === 'second') tzSecond = Number(part.value);
-    }
-
-    // Calculate the difference between the date components in UTC and in timezone
-    // This difference is the offset
-
-    const utcTimestamp = dt.getTime();
-
-    // Now construct the local timestamp from parts in the timezone
-    const localTimestamp = Date.UTC(tzYear, tzMonth - 1, tzDay, tzHour, tzMinute, tzSecond);
-
-    // The offset is the difference between utcTimestamp and localTimestamp
-    const offset = utcTimestamp - localTimestamp;
-
-    // Adjust the original date by the offset to get the true UTC timestamp for the input time in the input timezone
-    return new Date(utcTimestamp - offset);
+    return new Date(
+      Date.UTC(
+        Number(formattedYear),
+        Number(formattedMonth) - 1,
+        Number(formattedDay),
+        Number(formattedHour),
+        Number(formattedMinute),
+        Number(formattedSecond)
+      )
+    );
   }
 
   const startUTC = parseZonedDateTime(startTimeInput, inputTimeZone);
