@@ -1,123 +1,138 @@
-<script>
-    // World Clock Update Function
-function updateWorldClocks() {
-    const now = new Date();
-    const options = {
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: true
-    };
-    
-    const timeZones = {
-        'london-time': 'Europe/London',
-        'newyork-time': 'America/New_York',
-        'tokyo-time': 'Asia/Tokyo',
-        'mumbai-time': 'Asia/Kolkata',
-        'sydney-time': 'Australia/Sydney',
-        'singapore-time': 'Asia/Singapore'
-    };
-
-    for (const [elementId, timezone] of Object.entries(timeZones)) {
-        try {
-            const element = document.getElementById(elementId);
-            if (element) {
-                element.textContent = new Intl.DateTimeFormat('en-US', {
-                    ...options,
-                    timeZone: timezone
-                }).format(now);
-            }
-        } catch (error) {
-            console.error(`Error updating clock for ${timezone}: ${error}`);
-        }
-    }
-}
-
-// Start the clock updates
-updateWorldClocks(); // Initial update
-setInterval(updateWorldClocks, 1000); // Update every second
-
-// Time Zone Converter Function
 function convertTime() {
-    console.log('Convert button clicked');
-    
-    // Get input values
-    const startTime = document.getElementById('startTime').value;
-    const endTime = document.getElementById('endTime').value;
-    console.log('Start time:', startTime);
-    console.log('End time:', endTime);
-    
-    // Rest of the function...
-}
-    // Validate inputs
-    if (!startTime || !endTime) {
-        alert('Please select both start and end times');
-        return;
+  const startTimeInput = document.getElementById('startTime').value;
+  const endTimeInput = document.getElementById('endTime').value;
+  const inputTimeZone = document.getElementById('inputTimeZone').value;
+  const resultsDiv = document.getElementById('results');
+
+  if (!startTimeInput || !endTimeInput) {
+    alert('Please select both start and end times');
+    return;
+  }
+
+  // Convert input time string (local datetime) + input timezone to Date object in UTC
+  // Since datetime-local inputs have no timezone info, we parse them as if they are in inputTimeZone
+  // To do this accurately, we use Intl API trick:
+
+  // Helper: parse date-time string in a specific IANA time zone to UTC Date object
+  function parseZonedDateTime(dateTimeStr, timeZone) {
+    // Create a Date object with the given string as if it's in timeZone
+    const [date, time] = dateTimeStr.split('T');
+    const [year, month, day] = date.split('-').map(Number);
+    const [hour, minute] = time.split(':').map(Number);
+
+    // Get the offset in minutes for this timezone at this date
+    const dt = new Date(Date.UTC(year, month - 1, day, hour, minute));
+    // We want to get the equivalent UTC time for this local time in that time zone.
+    // Use Intl.DateTimeFormat with timeZone and get offset by comparing formatted time.
+
+    const dtFormat = new Intl.DateTimeFormat('en-US', {
+      timeZone,
+      hour12: false,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    });
+
+    // Format the Date as if it's in the target timezone
+    const parts = dtFormat.formatToParts(dt);
+    let tzYear, tzMonth, tzDay, tzHour, tzMinute, tzSecond;
+
+    for (const part of parts) {
+      if (part.type === 'year') tzYear = Number(part.value);
+      else if (part.type === 'month') tzMonth = Number(part.value);
+      else if (part.type === 'day') tzDay = Number(part.value);
+      else if (part.type === 'hour') tzHour = Number(part.value);
+      else if (part.type === 'minute') tzMinute = Number(part.value);
+      else if (part.type === 'second') tzSecond = Number(part.value);
     }
 
-    // Create date objects
-    const start = new Date(startTime);
-    const end = new Date(endTime);
+    // Calculate the difference between the date components in UTC and in timezone
+    // This difference is the offset
 
-    if (end < start) {
-        alert('End time cannot be earlier than start time');
-        return;
-    }
+    const utcTimestamp = dt.getTime();
 
-    // Define time zones for conversion
-    const timeZones = {
-        'IST': 'Asia/Kolkata',
-        'UTC': 'UTC',
-        'PST': 'America/Los_Angeles',
-        'UK': 'Europe/London',
-        'AEST': 'Australia/Sydney',
-        'SGT': 'Asia/Singapore',
-        'CET': 'Europe/Paris',
-        'EET': 'Europe/Helsinki',
-        'WET': 'Europe/Lisbon'
-    };
+    // Now construct the local timestamp from parts in the timezone
+    const localTimestamp = Date.UTC(tzYear, tzMonth - 1, tzDay, tzHour, tzMinute, tzSecond);
 
-    // Calculate duration
-    const duration = end - start;
-    const hours = Math.floor(duration / (1000 * 60 * 60));
-    const minutes = Math.floor((duration % (1000 * 60 * 60)) / (1000 * 60));
+    // The offset is the difference between utcTimestamp and localTimestamp
+    const offset = utcTimestamp - localTimestamp;
 
-    let outputHtml = `
-        <div class="time-segment">
-            <h3>Duration</h3>
-            <p><strong>Total Duration:</strong> ${hours}h ${minutes}m</p>
-        </div>
+    // Adjust the original date by the offset to get the true UTC timestamp for the input time in the input timezone
+    return new Date(utcTimestamp - offset);
+  }
+
+  const startUTC = parseZonedDateTime(startTimeInput, inputTimeZone);
+  const endUTC = parseZonedDateTime(endTimeInput, inputTimeZone);
+
+  if (endUTC < startUTC) {
+    alert('End time cannot be earlier than start time');
+    return;
+  }
+
+  const timeZones = {
+    IST: 'Asia/Kolkata',
+    UTC: 'UTC',
+    PST: 'America/Los_Angeles',
+    UK: 'Europe/London',
+    AEST: 'Australia/Sydney',
+    SGT: 'Asia/Singapore',
+    CET: 'Europe/Paris',
+    EET: 'Europe/Helsinki',
+    WET: 'Europe/Lisbon',
+  };
+
+  let html = `<h2 class="results-title">Converted Times:</h2>`;
+
+  // Epoch times
+  html += `
+    <div class="time-segment epoch-segment">
+      <h3>⏱️ EPOCH Time (milliseconds since Jan 1, 1970 UTC)</h3>
+      <p><strong>Start:</strong> ${startUTC.getTime()} ms</p>
+      <p><strong>End:</strong> ${endUTC.getTime()} ms</p>
+      <p><strong>Duration:</strong> ${endUTC.getTime() - startUTC.getTime()} ms</p>
+    </div>
+  `;
+
+  // For each time zone, convert and display start and end times, and duration in hours and minutes
+  for (const [zoneAbbr, tzName] of Object.entries(timeZones)) {
+    const startStr = startUTC.toLocaleString('en-US', {
+      timeZone: tzName,
+      hour12: true,
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    });
+
+    const endStr = endUTC.toLocaleString('en-US', {
+      timeZone: tzName,
+      hour12: true,
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    });
+
+    const durationMs = endUTC - startUTC;
+    const durationHours = Math.floor(durationMs / (1000 * 60 * 60));
+    const durationMinutes = Math.floor((durationMs % (1000 * 60 * 60)) / (1000 * 60));
+
+    html += `
+      <div class="time-segment">
+        <h3>${zoneAbbr} (${tzName})</h3>
+        <p><strong>Start:</strong> ${startStr}</p>
+        <p><strong>End:</strong> ${endStr}</p>
+        <p><strong>Duration:</strong> ${durationHours}h ${durationMinutes}m</p>
+      </div>
     `;
+  }
 
-    // Convert times for each time zone
-    for (const [zoneName, zoneValue] of Object.entries(timeZones)) {
-        try {
-            const options = {
-                timeZone: zoneValue,
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: true
-            };
-
-            const startInZone = start.toLocaleString('en-US', options);
-            const endInZone = end.toLocaleString('en-US', options);
-
-            outputHtml += `
-                <div class="time-segment">
-                    <h3>${zoneName}</h3>
-                    <p><strong>Start:</strong> ${startInZone}</p>
-                    <p><strong>End:</strong> ${endInZone}</p>
-                </div>
-            `;
-        } catch (error) {
-            console.error(`Error converting time for ${zoneName}: ${error}`);
-        }
-    }
-
-    // Display results
-    document.getElementById('results').innerHTML = outputHtml;
+  resultsDiv.innerHTML = html;
 }
-</script>
