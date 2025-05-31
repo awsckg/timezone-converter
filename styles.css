@@ -29,7 +29,63 @@ body {
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
   padding: 2rem;
 }
+.world-clock-section {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  border-radius: 12px;
+  color: white;
+}
 
+.world-clock-section h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.world-clock-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.clock-item {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 1rem;
+  border-radius: 8px;
+  backdrop-filter: blur(5px);
+  transition: transform 0.3s ease;
+}
+
+.clock-item:hover {
+  transform: translateY(-5px);
+}
+
+.clock-item h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.time-display {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+@media (max-width: 600px) {
+  .world-clock-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .clock-item {
+    padding: 0.8rem;
+  }
+  
+  .time-display {
+    font-size: 1.2rem;
+  }
+}
 .welcome-section {
   text-align: center;
   margin-bottom: 2rem;
