@@ -1,361 +1,176 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Time Zone Converter</title>
-<style>
-  /* Reset & base */
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f7f9fc;
-    color: #333;
-    margin: 0; padding: 20px;
-  }
-  h1, h2, h3 {
-    margin: 0 0 10px 0;
-  }
-  h1 {
-    font-size: 2rem;
-    color: #0055a5;
-  }
-  h2 {
-    color: #007acc;
-    margin-top: 40px;
-  }
-  .subtitle {
-    font-size: 1rem;
-    color: #555;
-    margin-bottom: 30px;
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Zone Converter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-  /* Layout */
-  .container {
-    max-width: 900px;
-    margin: auto;
-    background: #fff;
-    padding: 30px 40px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-    border-radius: 8px;
-  }
+        body {
+            background: #f5f6fa;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
 
-  .top-section {
-    display: flex;
-    justify-content: space-between;
-    gap: 40px;
-    flex-wrap: wrap;
-  }
+        .container {
+            width: 100%;
+            max-width: 800px;
+        }
 
-  /* World clock */
-  .world-clock {
-    flex: 1 1 300px;
-  }
-  .world-clock h2 {
-    margin-bottom: 20px;
-  }
-  .city-time {
-    font-size: 1.1rem;
-    margin-bottom: 12px;
-    line-height: 1.3;
-  }
-  .city-time span.emoji {
-    margin-right: 8px;
-    font-size: 1.2rem;
-  }
+        .world-clock {
+            background: #4a90e2;
+            padding: 20px;
+            border-radius: 12px;
+            color: white;
+            margin-bottom: 20px;
+        }
 
-  /* Input form */
-  .converter {
-    flex: 1 1 300px;
-  }
-  label {
-    display: block;
-    margin-bottom: 6px;
-    font-weight: 600;
-    color: #222;
-  }
-  select, input[type="datetime-local"] {
-    width: 100%;
-    padding: 8px 10px;
-    margin-bottom: 20px;
-    border: 1.8px solid #ccc;
-    border-radius: 6px;
-    font-size: 1rem;
-    transition: border-color 0.3s;
-  }
-  select:focus, input[type="datetime-local"]:focus {
-    border-color: #007acc;
-    outline: none;
-  }
-  button.convert-btn {
-    background: #007acc;
-    color: white;
-    border: none;
-    padding: 12px 25px;
-    font-size: 1rem;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background 0.3s;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  button.convert-btn:hover {
-    background: #005a99;
-  }
-  button.convert-btn:active {
-    background: #00487a;
-  }
+        .world-clock-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-  /* Results section */
-  #results {
-    margin-top: 40px;
-    line-height: 1.4;
-  }
-  .results-title {
-    font-size: 1.6rem;
-    margin-bottom: 20px;
-    color: #0055a5;
-  }
-  .time-segment {
-    border: 1px solid #ddd;
-    background: #fafafa;
-    padding: 18px 25px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-  }
-  .epoch-segment {
-    background: #e0f2ff;
-  }
-  .time-segment h3 {
-    margin-bottom: 12px;
-    color: #007acc;
-  }
-  .time-segment p {
-    margin: 6px 0;
-    font-weight: 500;
-  }
-  .time-differences {
-    max-height: 180px;
-    overflow-y: auto;
-    padding: 15px 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background: #fff;
-  }
-  .time-differences h3 {
-    margin-top: 0;
-  }
-  .time-differences ul {
-    padding-left: 18px;
-    margin: 8px 0 0 0;
-  }
-  .time-differences li {
-    margin-bottom: 6px;
-  }
+        .cities-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
 
-  /* Responsive */
-  @media (max-width: 720px) {
-    .top-section {
-      flex-direction: column;
-    }
-    .world-clock, .converter {
-      flex: 1 1 100%;
-    }
-  }
-</style>
+        .city-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .converter-section {
+            background: #4a90e2;
+            padding: 20px;
+            border-radius: 12px;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .converter-title {
+            font-size: 24px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .converter-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .input-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: #f5f5f5;
+        }
+
+        .convert-btn {
+            background: #4a90e2;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+        }
+
+        .convert-btn:hover {
+            background: #357abd;
+        }
+    </style>
 </head>
 <body>
-
-<div class="container">
-  <h1>⏰ Time Zone Converter</h1>
-  <p class="subtitle">Convert times between different time zones effortlessly</p>
-
-  <div class="top-section">
-
-    <div class="world-clock">
-      <h2>🌍 World Clock</h2>
-      <div class="city-time">🇬🇧 London: <span id="london">--:--:--</span></div>
-      <div class="city-time">🇺🇸 New York: <span id="newyork">--:--:--</span></div>
-      <div class="city-time">🇯🇵 Tokyo: <span id="tokyo">--:--:--</span></div>
-      <div class="city-time">🇮🇳 Mumbai: <span id="mumbai">--:--:--</span></div>
-      <div class="city-time">🇦🇺 Sydney: <span id="sydney">--:--:--</span></div>
-      <div class="city-time">🇸🇬 Singapore: <span id="singapore">--:--:--</span></div>
-    </div>
-
-    <div class="converter">
-      <label for="inputTimeZone">🌐 Input Time Zone</label>
-      <select id="inputTimeZone" aria-label="Select input timezone">
-        <option value="Asia/Kolkata">🇮🇳 IST (Asia/Kolkata)</option>
-        <option value="UTC">UTC</option>
-        <option value="America/Los_Angeles">PST (America/Los_Angeles)</option>
-        <option value="Europe/London">UK (Europe/London)</option>
-        <option value="Australia/Sydney">AEST (Australia/Sydney)</option>
-        <option value="Asia/Singapore">SGT (Asia/Singapore)</option>
-        <option value="Europe/Paris">CET (Europe/Paris)</option>
-        <option value="Europe/Helsinki">EET (Europe/Helsinki)</option>
-        <option value="Europe/Lisbon">WET (Europe/Lisbon)</option>
-      </select>
-
-      <label for="startTime">📅 Start Time</label>
-      <input type="datetime-local" id="startTime" />
-
-      <label for="endTime">📅 End Time</label>
-      <input type="datetime-local" id="endTime" />
-
-      <button class="convert-btn" onclick="convertTime()">Convert Time 🔄</button>
-    </div>
-  </div>
-
-  <div id="results"></div>
-</div>
-
-<script>
-  // World Clock live update function
-  function updateWorldClocks() {
-    const cities = {
-      london: 'Europe/London',
-      newyork: 'America/New_York',
-      tokyo: 'Asia/Tokyo',
-      mumbai: 'Asia/Kolkata',
-      sydney: 'Australia/Sydney',
-      singapore: 'Asia/Singapore'
-    };
-
-    for (const [id, tz] of Object.entries(cities)) {
-      const now = new Date();
-      const timeStr = now.toLocaleTimeString('en-US', {
-        timeZone: tz,
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: true
-      });
-      document.getElementById(id).textContent = timeStr;
-    }
-  }
-
-  updateWorldClocks();
-  setInterval(updateWorldClocks, 1000);
-
-
-  // Convert Time function
-  function convertTime() {
-    const inputTimeZone = document.getElementById('inputTimeZone').value;
-    const startTime = document.getElementById('startTime').value;
-    const endTime = document.getElementById('endTime').value;
-
-    if (!startTime || !endTime) {
-      alert('Please select both start and end times');
-      return;
-    }
-
-    // Helper to parse datetime-local as Date in specified timezone
-    function parseDateInTimeZone(dateTimeLocal, timeZone) {
-      const [date, time] = dateTimeLocal.split('T');
-      const [year, month, day] = date.split('-').map(Number);
-      const [hour, minute] = time.split(':').map(Number);
-      const utcDate = new Date(Date.UTC(year, month - 1, day, hour, minute));
-      const dtf = new Intl.DateTimeFormat('en-US', {
-        hour12: false,
-        timeZone,
-        year: 'numeric', month: '2-digit', day: '2-digit',
-        hour: '2-digit', minute: '2-digit', second: '2-digit'
-      });
-      const parts = dtf.formatToParts(utcDate);
-      let tzYear, tzMonth, tzDay, tzHour, tzMinute, tzSecond;
-      for (const part of parts) {
-        if (part.type === 'year') tzYear = Number(part.value);
-        else if (part.type === 'month') tzMonth = Number(part.value);
-        else if (part.type === 'day') tzDay = Number(part.value);
-        else if (part.type === 'hour') tzHour = Number(part.value);
-        else if (part.type === 'minute') tzMinute = Number(part.value);
-        else if (part.type === 'second') tzSecond = Number(part.value);
-      }
-      const inputLocalDate = new Date(year, month - 1, day, hour, minute, 0);
-      const tzLocalDate = new Date(tzYear, tzMonth - 1, tzDay, tzHour, tzMinute, tzSecond);
-      const offsetMs = inputLocalDate - tzLocalDate;
-      return new Date(utcDate.getTime() + offsetMs);
-    }
-
-    const startDate = parseDateInTimeZone(startTime, inputTimeZone);
-    const endDate = parseDateInTimeZone(endTime, inputTimeZone);
-
-    if (endDate < startDate) {
-      alert('End time cannot be earlier than start time');
-      return;
-    }
-
-    const timeZones = {
-      'IST': 'Asia/Kolkata',
-      'UTC': 'UTC',
-      'PST': 'America/Los_Angeles',
-      'UK': 'Europe/London',
-      'AEST': 'Australia/Sydney',
-      'SGT': 'Asia/Singapore',
-      'CET': 'Europe/Paris',
-      'EET': 'Europe/Helsinki',
-      'WET': 'Europe/Lisbon'
-    };
-
-    let results = `<h2 class="results-title">Converted Times:</h2>`;
-
-    // Epoch times
-    results += `
-      <div class="time-segment epoch-segment">
-        <h3>🕒 Epoch Time</h3>
-        <p><strong>Start:</strong> ${startDate.getTime()} ms</p>
-        <p><strong>End:</strong> ${endDate.getTime()} ms</p>
-        <p><strong>Duration:</strong> ${endDate.getTime() - startDate.getTime()} ms</p>
-      </div>
-    `;
-
-    const convertedTimes = {};
-
-    for (const [abbr, tz] of Object.entries(timeZones)) {
-      const options = {
-        timeZone: tz,
-        hour12: true,
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-      };
-
-      const startStr = startDate.toLocaleString('en-US', options);
-      const endStr = endDate.toLocaleString('en-US', options);
-
-      convertedTimes[abbr] = {
-        start: new Date(startDate.toLocaleString('en-US', { timeZone: tz })),
-        end: new Date(endDate.toLocaleString('en-US', { timeZone: tz })),
-      };
-
-      results += `
-        <div class="time-segment">
-          <h3>${abbr} (${tz})</h3>
-          <p><strong>Start:</strong> ${startStr}</p>
-          <p><strong>End:</strong> ${endStr}</p>
+    <div class="container">
+        <div class="world-clock">
+            <div class="world-clock-title">
+                🌍 World Clock
+            </div>
+            <div class="cities-grid">
+                <div class="city-box">🇬🇧 London</div>
+                <div class="city-box">🇺🇸 New York</div>
+                <div class="city-box">🇯🇵 Tokyo</div>
+                <div class="city-box">🇮🇳 Mumbai</div>
+                <div class="city-box">🇦🇺 Sydney</div>
+                <div class="city-box">🇸🇬 Singapore</div>
+            </div>
         </div>
-      `;
-    }
 
-    // Time differences
-    results += `<div class="time-differences"><h3>🕓 Time Differences</h3><ul>`;
-    const tzKeys = Object.keys(convertedTimes);
-    for (let i = 0; i < tzKeys.length; i++) {
-      for (let j = i + 1; j < tzKeys.length; j++) {
-        const a = tzKeys[i], b = tzKeys[j];
-        const diffMs = convertedTimes[a].start - convertedTimes[b].start;
-        const diffHrs = (diffMs / (1000 * 60 * 60)).toFixed(1);
-        results += `<li><strong>${a} → ${b}:</strong> ${diffHrs} hours</li>`;
-      }
-    }
-    results += `</ul></div>`;
+        <div class="converter-section">
+            <div class="converter-title">
+                ⏰ Time Zone Converter
+            </div>
+            <div class="converter-subtitle">
+                Convert times between different time zones effortlessly
+            </div>
+        </div>
 
-    document.getElementById('results').innerHTML = results;
-  }
-</script>
+        <div class="input-container">
+            <div class="input-group">
+                <label>🌐 Input Time Zone</label>
+                <select>
+                    <option>🇮🇳 IST (Asia/Kolkata)</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>📅 Start Time</label>
+                <input type="text" placeholder="31/05/2025, 04:00 pm" />
+            </div>
+            <div class="input-group">
+                <label>📅 End Time</label>
+                <input type="text" placeholder="31/05/2025, 04:30 pm" />
+            </div>
+            <button class="convert-btn">
+                Convert Time 🔄
+            </button>
+        </div>
+    </div>
 
+    <script>
+        // Add your JavaScript code here
+    </script>
 </body>
 </html>
