@@ -9,38 +9,23 @@ function convertTime() {
     return;
   }
 
-  // Correct helper to convert datetime-local + IANA timezone into accurate UTC Date
+  // Parse date-time string in a specific IANA time zone
   function parseZonedDateTime(dateTimeStr, timeZone) {
-    const [date, time] = dateTimeStr.split('T');
-    const [year, month, day] = date.split('-').map(Number);
-    const [hour, minute] = time.split(':').map(Number);
-    const localDate = new Date(year, month - 1, day, hour, minute);
-
-    const format = new Intl.DateTimeFormat('en-US', {
+    const date = new Date(dateTimeStr); // parse as local datetime
+    const options = {
       timeZone,
-      timeZoneName: 'short',
-      hour12: false,
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
+      year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', second: '2-digit',
+      hour12: false
+    };
+
+    const parts = new Intl.DateTimeFormat('en-US', options).formatToParts(date);
+    const values = {};
+    parts.forEach(({ type, value }) => {
+      values[type] = parseInt(value, 10);
     });
 
-    const parts = format.formatToParts(localDate);
-    let tzYear, tzMonth, tzDay, tzHour, tzMinute, tzSecond;
-
-    for (const part of parts) {
-      if (part.type === 'year') tzYear = Number(part.value);
-      else if (part.type === 'month') tzMonth = Number(part.value);
-      else if (part.type === 'day') tzDay = Number(part.value);
-      else if (part.type === 'hour') tzHour = Number(part.value);
-      else if (part.type === 'minute') tzMinute = Number(part.value);
-      else if (part.type === 'second') tzSecond = Number(part.value);
-    }
-
-    return new Date(Date.UTC(tzYear, tzMonth - 1, tzDay, tzHour, tzMinute, tzSecond));
+    return new Date(Date.UTC(values.year, values.month - 1, values.day, values.hour, values.minute, values.second));
   }
 
   const startUTC = parseZonedDateTime(startTimeInput, inputTimeZone);
@@ -75,7 +60,7 @@ function convertTime() {
     </div>
   `;
 
-  // For each time zone, convert and display start and end times
+  // For each time zone
   for (const [zoneAbbr, tzName] of Object.entries(timeZones)) {
     const startStr = startUTC.toLocaleString('en-US', {
       timeZone: tzName,
