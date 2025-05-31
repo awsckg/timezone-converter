@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Time Zone Converter</title>
+  <title>Time Zone Converter with Luxon</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -29,7 +29,7 @@
   </style>
 </head>
 <body>
-  <h1>⏰ Time Zone Converter</h1>
+  <h1>⏰ Time Zone Converter with Luxon</h1>
 
   <label for="inputTimeZone">🌐 Input Time Zone</label>
   <select id="inputTimeZone">
@@ -54,7 +54,11 @@
 
   <div id="results" class="results"></div>
 
+  <!-- Load Luxon -->
+  <script src="https://cdn.jsdelivr.net/npm/luxon@3/build/global/luxon.min.js"></script>
   <script>
+    const { DateTime, Interval } = luxon;
+
     const timeZones = [
       { name: "IST (Asia/Kolkata)", zone: "Asia/Kolkata" },
       { name: "UTC (UTC)", zone: "UTC" },
@@ -67,48 +71,6 @@
       { name: "WET (Europe/Lisbon)", zone: "Europe/Lisbon" },
     ];
 
-    // This function correctly parses a datetime-local string as if it is in the given timezone,
-    // and returns a JS Date object in UTC representing the same instant.
-    function parseZonedDateTime(dateTimeStr, timeZone) {
-      if (!dateTimeStr) return null;
-
-      // dateTimeStr example: "2025-05-31T18:19"
-      const [datePart, timePart] = dateTimeStr.split('T');
-      const [year, month, day] = datePart.split('-').map(Number);
-      const [hour, minute] = timePart.split(':').map(Number);
-
-      // Step 1: Create a Date object as if the input datetime is UTC (temporary)
-      const tempDate = new Date(Date.UTC(year, month - 1, day, hour, minute));
-
-      // Step 2: Use Intl.DateTimeFormat to find the timezone offset at this instant for the target zone
-      const formatter = new Intl.DateTimeFormat('en-US', {
-        timeZone,
-        hour12: false,
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-      });
-
-      const parts = formatter.formatToParts(tempDate);
-
-      let tzYear, tzMonth, tzDay, tzHour, tzMinute, tzSecond;
-
-      for (const part of parts) {
-        if (part.type === 'year') tzYear = Number(part.value);
-        else if (part.type === 'month') tzMonth = Number(part.value);
-        else if (part.type === 'day') tzDay = Number(part.value);
-        else if (part.type === 'hour') tzHour = Number(part.value);
-        else if (part.type === 'minute') tzMinute = Number(part.value);
-        else if (part.type === 'second') tzSecond = Number(part.value);
-      }
-
-      // Step 3: Build UTC timestamp that corresponds to the input datetime in the input timezone
-      return new Date(Date.UTC(tzYear, tzMonth - 1, tzDay, tzHour, tzMinute, tzSecond));
-    }
-
     function convertTime() {
       const startTimeInput = document.getElementById('startTime').value;
       const endTimeInput = document.getElementById('endTime').value;
@@ -120,64 +82,48 @@
         return;
       }
 
-      const startUTC = parseZonedDateTime(startTimeInput, inputTimeZone);
-      const endUTC = parseZonedDateTime(endTimeInput, inputTimeZone);
+      // Parse datetime-local string in selected timezone
+      const startDT = DateTime.fromISO(startTimeInput, { zone: inputTimeZone });
+      const endDT = DateTime.fromISO(endTimeInput, { zone: inputTimeZone });
 
-      if (!startUTC || !endUTC || isNaN(startUTC) || isNaN(endUTC)) {
-        alert('Invalid date/time inputs!');
+      if (!startDT.isValid || !endDT.isValid) {
+        alert('Invalid date/time input!');
         return;
       }
 
-      if (endUTC < startUTC) {
+      if (endDT < startDT) {
         alert('End time cannot be earlier than start time');
         return;
       }
 
-      const durationMs = endUTC - startUTC;
+      const duration = endDT.diff(startDT);
+      const durationMs = duration.toMillis();
 
       let html = `<h2>Converted Times:</h2>`;
 
       html += `
         <div class="time-segment">
           <h3>⏱️ EPOCH Time (milliseconds since Jan 1, 1970 UTC)</h3>
-          <p><strong>Start:</strong> ${startUTC.getTime()} ms</p>
-          <p><strong>End:</strong> ${endUTC.getTime()} ms</p>
+          <p><strong>Start:</strong> ${startDT.toMillis()} ms</p>
+          <p><strong>End:</strong> ${endDT.toMillis()} ms</p>
           <p><strong>Duration:</strong> ${durationMs} ms</p>
         </div>
       `;
 
       timeZones.forEach(({ name, zone }) => {
-        const startStr = startUTC.toLocaleString('en-US', {
-          timeZone: zone,
-          hour12: true,
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-        });
+        const startStr = startDT.setZone(zone).toLocaleString(DateTime.DATETIME_MED_WITH_SECONDS);
+        const endStr = endDT.setZone(zone).toLocaleString(DateTime.DATETIME_MED_WITH_SECONDS);
 
-        const endStr = endUTC.toLocaleString('en-US', {
-          timeZone: zone,
-          hour12: true,
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-        });
-
-        const durationHours = Math.floor(durationMs / (1000 * 60 * 60));
-        const durationMinutes = Math.floor((durationMs % (1000 * 60 * 60)) / (1000 * 60));
+        const dur = endDT.diff(startDT, ['hours', 'minutes']);
+        const h = Math.floor(dur.hours);
+        const m = Math.floor(dur.minutes);
 
         html += `
           <div class="time-segment">
             <h3>${name}</h3>
             <p><strong>Start:</strong> ${startStr}</p>
             <p><strong>End:</strong> ${endStr}</p>
-            <p><strong>Duration:</strong> ${durationHours}h ${durationMinutes}m</p>
+            <p><strong>Duration:</strong> ${h}h ${m}m</p>
           </div>
         `;
       });
