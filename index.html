@@ -3,12 +3,34 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Time Zone Converter</title>
+  <title>World Clock & Time Zone Converter</title>
   <link rel="stylesheet" href="styles.css" />
   <script src="script.js" defer></script>
 </head>
 <body>
   <div class="container">
+    <div class="world-clock-section">
+      <h1>🌍 World Clock</h1>
+      <div class="world-clock-grid">
+        <div class="clock-item">
+          <h3>🇬🇧 London</h3>
+          <div id="london-time" class="time-display"></div>
+        </div>
+        <div class="clock-item">
+          <h3>🇺🇸 New York</h3>
+          <div id="newyork-time" class="time-display"></div>
+        </div>
+        <div class="clock-item">
+          <h3>🇯🇵 Tokyo</h3>
+          <div id="tokyo-time" class="time-display"></div>
+        </div>
+        <div class="clock-item">
+          <h3>🇮🇳 Mumbai</h3>
+          <div id="mumbai-time" class="time-display"></div>
+        </div>
+      </div>
+    </div>
+
     <div class="welcome-section">
       <h1>⏰ Time Zone Converter</h1>
       <p>Convert times between different time zones effortlessly</p>
