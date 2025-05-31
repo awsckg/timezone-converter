@@ -76,15 +76,13 @@
       </div>
 
       <div id="results"></div>
-    </div>
+        </div>
   </div>
 
   <script>
-    // Your JavaScript code here (the entire script from the previous response)
-    // Function to update world clocks
+    // World Clock Update Function
     function updateWorldClocks() {
         const now = new Date();
-        
         const options = {
             hour: '2-digit',
             minute: '2-digit',
@@ -92,32 +90,66 @@
             hour12: true
         };
         
-        const londonTime = new Date(now.toLocaleString('en-US', { timeZone: 'Europe/London' }));
-        document.getElementById('london-time').textContent = londonTime.toLocaleString('en-US', options);
-        
-        const newYorkTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }));
-        document.getElementById('newyork-time').textContent = newYorkTime.toLocaleString('en-US', options);
-        
-        const tokyoTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
-        document.getElementById('tokyo-time').textContent = tokyoTime.toLocaleString('en-US', options);
-        
-        const mumbaiTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
-        document.getElementById('mumbai-time').textContent = mumbaiTime.toLocaleString('en-US', options);
+        const timeZones = {
+            'london-time': 'Europe/London',
+            'newyork-time': 'America/New_York',
+            'tokyo-time': 'Asia/Tokyo',
+            'mumbai-time': 'Asia/Kolkata',
+            'sydney-time': 'Australia/Sydney',
+            'singapore-time': 'Asia/Singapore'
+        };
 
-        const sydneyTime = new Date(now.toLocaleString('en-US', { timeZone: 'Australia/Sydney' }));
-        document.getElementById('sydney-time').textContent = sydneyTime.toLocaleString('en-US', options);
-
-        const singaporeTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Singapore' }));
-        document.getElementById('singapore-time').textContent = singaporeTime.toLocaleString('en-US', options);
+        for (const [elementId, timezone] of Object.entries(timeZones)) {
+            const time = new Date(now.toLocaleString('en-US', { timeZone: timezone }));
+            document.getElementById(elementId).textContent = time.toLocaleString('en-US', options);
+        }
     }
 
+    // Update clocks every second
     setInterval(updateWorldClocks, 1000);
     updateWorldClocks();
 
+    // Time Zone Converter Function
     function convertTime() {
-        // Rest of your convertTime function code here
-        // (Copy the entire convertTime function from the previous response)
+        // Get input values
+        const startTime = document.getElementById('startTime').value;
+        const endTime = document.getElementById('endTime').value;
+        const selectedZone = document.getElementById('inputTimeZone').value;
+
+        // Validate inputs
+        if (!startTime || !endTime) {
+            alert('Please select both start and end times');
+            return;
+        }
+
+        // Create date objects
+        const start = new Date(startTime);
+        const end = new Date(endTime);
+
+        if (end < start) {
+            alert('End time cannot be earlier than start time');
+            return;
+        }
+
+        // Calculate duration
+        const duration = end - start;
+        const hours = Math.floor(duration / (1000 * 60 * 60));
+        const minutes = Math.floor((duration % (1000 * 60 * 60)) / (1000 * 60));
+
+        // Generate output HTML
+        const outputHtml = `
+            <div class="time-segment">
+                <h3>Converted Times</h3>
+                <p><strong>Time Zone:</strong> ${selectedZone}</p>
+                <p><strong>Start:</strong> ${start.toLocaleString()}</p>
+                <p><strong>End:</strong> ${end.toLocaleString()}</p>
+                <p><strong>Duration:</strong> ${hours}h ${minutes}m</p>
+            </div>
+        `;
+
+        // Display results
+        document.getElementById('results').innerHTML = outputHtml;
     }
-  </script>
+</script>
 </body>
 </html>
