@@ -1,35 +1,44 @@
 <script>
     // World Clock Update Function
-    function updateWorldClocks() {
-        const now = new Date();
-        const options = {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: true
-        };
-        
-        const timeZones = {
-            'london-time': 'Europe/London',
-            'newyork-time': 'America/New_York',
-            'tokyo-time': 'Asia/Tokyo',
-            'mumbai-time': 'Asia/Kolkata',
-            'sydney-time': 'Australia/Sydney',
-            'singapore-time': 'Asia/Singapore'
-        };
+function updateWorldClocks() {
+    const now = new Date();
+    const options = {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+    };
+    
+    const timeZones = {
+        'london-time': 'Europe/London',
+        'newyork-time': 'America/New_York',
+        'tokyo-time': 'Asia/Tokyo',
+        'mumbai-time': 'Asia/Kolkata',
+        'sydney-time': 'Australia/Sydney',
+        'singapore-time': 'Asia/Singapore'
+    };
 
-        for (const [elementId, timezone] of Object.entries(timeZones)) {
-            const time = new Date(now.toLocaleString('en-US', { timeZone: timezone }));
-            document.getElementById(elementId).textContent = time.toLocaleString('en-US', options);
+    for (const [elementId, timezone] of Object.entries(timeZones)) {
+        try {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.textContent = new Intl.DateTimeFormat('en-US', {
+                    ...options,
+                    timeZone: timezone
+                }).format(now);
+            }
+        } catch (error) {
+            console.error(`Error updating clock for ${timezone}: ${error}`);
         }
     }
+}
 
-    // Update clocks every second
-    setInterval(updateWorldClocks, 1000);
-    updateWorldClocks();
+// Start the clock updates
+updateWorldClocks(); // Initial update
+setInterval(updateWorldClocks, 1000); // Update every second
 
-    // Time Zone Converter Function
-    function convertTime() {
+// Time Zone Converter Function
+function convertTime() {
     // Get input values
     const startTime = document.getElementById('startTime').value;
     const endTime = document.getElementById('endTime').value;
@@ -50,7 +59,7 @@
         return;
     }
 
-    // Define all time zones
+    // Define time zones for conversion
     const timeZones = {
         'IST': 'Asia/Kolkata',
         'UTC': 'UTC',
@@ -68,7 +77,6 @@
     const hours = Math.floor(duration / (1000 * 60 * 60));
     const minutes = Math.floor((duration % (1000 * 60 * 60)) / (1000 * 60));
 
-    // Start building output HTML
     let outputHtml = `
         <div class="time-segment">
             <h3>Duration</h3>
@@ -76,53 +84,35 @@
         </div>
     `;
 
-    // Add conversions for each time zone
+    // Convert times for each time zone
     for (const [zoneName, zoneValue] of Object.entries(timeZones)) {
-        const startOptions = {
-            timeZone: zoneValue,
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: true
-        };
+        try {
+            const options = {
+                timeZone: zoneValue,
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            };
 
-        const endOptions = { ...startOptions };
+            const startInZone = start.toLocaleString('en-US', options);
+            const endInZone = end.toLocaleString('en-US', options);
 
-        const startInZone = start.toLocaleString('en-US', startOptions);
-        const endInZone = end.toLocaleString('en-US', endOptions);
-
-        outputHtml += `
-            <div class="time-segment">
-                <h3>${zoneName} (${zoneValue})</h3>
-                <p><strong>Start:</strong> ${startInZone}</p>
-                <p><strong>End:</strong> ${endInZone}</p>
-            </div>
-        `;
+            outputHtml += `
+                <div class="time-segment">
+                    <h3>${zoneName}</h3>
+                    <p><strong>Start:</strong> ${startInZone}</p>
+                    <p><strong>End:</strong> ${endInZone}</p>
+                </div>
+            `;
+        } catch (error) {
+            console.error(`Error converting time for ${zoneName}: ${error}`);
+        }
     }
 
     // Display results
     document.getElementById('results').innerHTML = outputHtml;
 }
-
-        // Calculate duration
-        const duration = end - start;
-        const hours = Math.floor(duration / (1000 * 60 * 60));
-        const minutes = Math.floor((duration % (1000 * 60 * 60)) / (1000 * 60));
-
-        // Generate output HTML
-        const outputHtml = `
-            <div class="time-segment">
-                <h3>Converted Times</h3>
-                <p><strong>Time Zone:</strong> ${selectedZone}</p>
-                <p><strong>Start:</strong> ${start.toLocaleString()}</p>
-                <p><strong>End:</strong> ${end.toLocaleString()}</p>
-                <p><strong>Duration:</strong> ${hours}h ${minutes}m</p>
-            </div>
-        `;
-
-        // Display results
-        document.getElementById('results').innerHTML = outputHtml;
-    }
 </script>
