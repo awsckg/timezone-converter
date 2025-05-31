@@ -177,8 +177,26 @@ button:hover {
     .container {
         padding: 1rem;
     }
-    
+
     .welcome-section h1 {
         font-size: 2rem;
     }
+}
+
+/* 🌍 World Clock Styles */
+.world-clock-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.clock-box {
+    background: white;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    font-size: 1.1rem;
+    color: var(--secondary-color);
+    text-align: center;
 }
