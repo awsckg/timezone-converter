@@ -3,17 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <div class="world-clock">
-  <h2>🌍 World Clock</h2>
-  <div class="clock-list">
-    <div class="clock" id="clock-london">🇬🇧 London: <span></span></div>
-    <div class="clock" id="clock-ny">🇺🇸 New York: <span></span></div>
-    <div class="clock" id="clock-tokyo">🇯🇵 Tokyo: <span></span></div>
-    <div class="clock" id="clock-mumbai">🇮🇳 Mumbai: <span></span></div>
-    <div class="clock" id="clock-sydney">🇦🇺 Sydney: <span></span></div>
-    <div class="clock" id="clock-singapore">🇸🇬 Singapore: <span></span></div>
-  </div>
-</div>
   <title>Time Zone Converter</title>
   <link rel="stylesheet" href="styles.css" />
   <script src="script.js" defer></script>
@@ -25,6 +14,22 @@
       <p>Convert times between different time zones effortlessly</p>
     </div>
 
+    <!-- World Clock Section -->
+    <div class="world-clock">
+      <h2 style="text-align: center; color: var(--secondary-color); margin-bottom: 1rem;">
+        🌍 World Clock
+      </h2>
+      <div class="world-clock-grid">
+        <div class="clock-box">🇬🇧 London: <span id="london">--:--:--</span></div>
+        <div class="clock-box">🇺🇸 New York: <span id="newyork">--:--:--</span></div>
+        <div class="clock-box">🇯🇵 Tokyo: <span id="tokyo">--:--:--</span></div>
+        <div class="clock-box">🇮🇳 Mumbai: <span id="mumbai">--:--:--</span></div>
+        <div class="clock-box">🇦🇺 Sydney: <span id="sydney">--:--:--</span></div>
+        <div class="clock-box">🇸🇬 Singapore: <span id="singapore">--:--:--</span></div>
+      </div>
+    </div>
+
+    <!-- Converter Section -->
     <div class="converter">
       <div class="input-section">
         <div class="time-inputs">
