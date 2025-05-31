@@ -61,7 +61,7 @@ function convertTime() {
     const offset = utcTimestamp - localTimestamp;
 
     // Adjust the original date by the offset to get the true UTC timestamp for the input time in the input timezone
-    return new Date(utcTimestamp - offset);
+    return new Date(localTimestamp);
   }
 
   const startUTC = parseZonedDateTime(startTimeInput, inputTimeZone);
