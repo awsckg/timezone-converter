@@ -4,50 +4,182 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Time Zone Converter</title>
-  <link rel="stylesheet" href="styles.css" />
-  <script src="script.js" defer></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      max-width: 700px;
+    }
+    label, select, input, button {
+      display: block;
+      margin: 10px 0;
+      font-size: 1rem;
+    }
+    .results {
+      margin-top: 20px;
+      border-top: 1px solid #ccc;
+      padding-top: 10px;
+    }
+    .time-segment {
+      margin-bottom: 15px;
+    }
+    h2 {
+      margin-bottom: 10px;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <div class="welcome-section">
-      <h1>⏰ Time Zone Converter</h1>
-      <p>Convert times between different time zones effortlessly</p>
-    </div>
+  <h1>⏰ Time Zone Converter</h1>
 
-    <div class="converter">
-      <div class="input-section">
-        <div class="time-inputs">
-          <div class="input-group">
-            <label for="inputTimeZone">🌐 Input Time Zone</label>
-            <select id="inputTimeZone">
-              <option value="Asia/Kolkata">🇮🇳 IST (Asia/Kolkata)</option>
-              <option value="UTC">🌐 UTC</option>
-              <option value="America/Los_Angeles">🇺🇸 PST (America/Los_Angeles)</option>
-              <option value="Europe/London">🇬🇧 UK (Europe/London)</option>
-              <option value="Australia/Sydney">🇦🇺 AEST (Australia/Sydney)</option>
-              <option value="Asia/Singapore">🇸🇬 SGT (Asia/Singapore)</option>
-              <option value="Europe/Paris">🇫🇷 CET (Europe/Paris)</option>
-              <option value="Europe/Helsinki">🇫🇮 EET (Europe/Helsinki)</option>
-              <option value="Europe/Lisbon">🇵🇹 WET (Europe/Lisbon)</option>
-            </select>
-          </div>
+  <label for="inputTimeZone">🌐 Input Time Zone</label>
+  <select id="inputTimeZone">
+    <option value="Asia/Kolkata">🇮🇳 IST (Asia/Kolkata)</option>
+    <option value="UTC">UTC (UTC)</option>
+    <option value="America/Los_Angeles">PST (America/Los_Angeles)</option>
+    <option value="Europe/London">UK (Europe/London)</option>
+    <option value="Australia/Sydney">AEST (Australia/Sydney)</option>
+    <option value="Asia/Singapore">SGT (Asia/Singapore)</option>
+    <option value="Europe/Paris">CET (Europe/Paris)</option>
+    <option value="Europe/Helsinki">EET (Europe/Helsinki)</option>
+    <option value="Europe/Lisbon">WET (Europe/Lisbon)</option>
+  </select>
 
-          <div class="input-group">
-            <label for="startTime">📅 Start Time</label>
-            <input type="datetime-local" id="startTime" />
-          </div>
+  <label for="startTime">📅 Start Time</label>
+  <input type="datetime-local" id="startTime" />
 
-          <div class="input-group">
-            <label for="endTime">📅 End Time</label>
-            <input type="datetime-local" id="endTime" />
-          </div>
+  <label for="endTime">📅 End Time</label>
+  <input type="datetime-local" id="endTime" />
+
+  <button onclick="convertTime()">Convert Time 🔄</button>
+
+  <div id="results" class="results"></div>
+
+  <script>
+    const timeZones = [
+      { name: "IST (Asia/Kolkata)", zone: "Asia/Kolkata" },
+      { name: "UTC (UTC)", zone: "UTC" },
+      { name: "PST (America/Los_Angeles)", zone: "America/Los_Angeles" },
+      { name: "UK (Europe/London)", zone: "Europe/London" },
+      { name: "AEST (Australia/Sydney)", zone: "Australia/Sydney" },
+      { name: "SGT (Asia/Singapore)", zone: "Asia/Singapore" },
+      { name: "CET (Europe/Paris)", zone: "Europe/Paris" },
+      { name: "EET (Europe/Helsinki)", zone: "Europe/Helsinki" },
+      { name: "WET (Europe/Lisbon)", zone: "Europe/Lisbon" },
+    ];
+
+    function parseZonedDateTime(dateTimeStr, timeZone) {
+      if (!dateTimeStr) return null;
+
+      // dateTimeStr example: "2025-05-31T18:19"
+      // Create a Date object as if dateTimeStr is in the timeZone, then convert to UTC date
+
+      const [datePart, timePart] = dateTimeStr.split('T');
+      const [year, month, day] = datePart.split('-').map(Number);
+      const [hour, minute] = timePart.split(':').map(Number);
+
+      // Step 1: Create a Date object from input as if it was in UTC (temporary)
+      const tempDate = new Date(Date.UTC(year, month - 1, day, hour, minute));
+
+      // Step 2: Use Intl API to find the offset between the timezone and UTC at that moment
+      const formatter = new Intl.DateTimeFormat('en-US', {
+        timeZone,
+        hour12: false,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      });
+
+      const parts = formatter.formatToParts(tempDate);
+      let tzYear, tzMonth, tzDay, tzHour, tzMinute, tzSecond;
+
+      for (const part of parts) {
+        if (part.type === 'year') tzYear = Number(part.value);
+        else if (part.type === 'month') tzMonth = Number(part.value);
+        else if (part.type === 'day') tzDay = Number(part.value);
+        else if (part.type === 'hour') tzHour = Number(part.value);
+        else if (part.type === 'minute') tzMinute = Number(part.value);
+        else if (part.type === 'second') tzSecond = Number(part.value);
+      }
+
+      // Step 3: Convert this back to a UTC timestamp to get correct Date object for the input time in the given timeZone
+      const utcTimestamp = Date.UTC(tzYear, tzMonth - 1, tzDay, tzHour, tzMinute, tzSecond);
+      return new Date(utcTimestamp);
+    }
+
+    function convertTime() {
+      const startTimeInput = document.getElementById('startTime').value;
+      const endTimeInput = document.getElementById('endTime').value;
+      const inputTimeZone = document.getElementById('inputTimeZone').value;
+      const resultsDiv = document.getElementById('results');
+
+      if (!startTimeInput || !endTimeInput) {
+        alert('Please select both start and end times');
+        return;
+      }
+
+      const startUTC = parseZonedDateTime(startTimeInput, inputTimeZone);
+      const endUTC = parseZonedDateTime(endTimeInput, inputTimeZone);
+
+      if (endUTC < startUTC) {
+        alert('End time cannot be earlier than start time');
+        return;
+      }
+
+      const durationMs = endUTC - startUTC;
+
+      let html = `<h2>Converted Times:</h2>`;
+
+      html += `
+        <div class="time-segment">
+          <h3>⏱️ EPOCH Time (milliseconds since Jan 1, 1970 UTC)</h3>
+          <p><strong>Start:</strong> ${startUTC.getTime()} ms</p>
+          <p><strong>End:</strong> ${endUTC.getTime()} ms</p>
+          <p><strong>Duration:</strong> ${durationMs} ms</p>
         </div>
+      `;
 
-        <button onclick="convertTime()">Convert Time 🔄</button>
-      </div>
+      timeZones.forEach(({ name, zone }) => {
+        const startStr = startUTC.toLocaleString('en-US', {
+          timeZone: zone,
+          hour12: true,
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+        });
 
-      <div id="results"></div>
-    </div>
-  </div>
+        const endStr = endUTC.toLocaleString('en-US', {
+          timeZone: zone,
+          hour12: true,
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+        });
+
+        const durationMinutes = Math.floor(durationMs / (1000 * 60));
+        const durationHours = Math.floor(durationMinutes / 60);
+        const durationRemainderMinutes = durationMinutes % 60;
+
+        html += `
+          <div class="time-segment">
+            <h3>${name}</h3>
+            <p><strong>Start:</strong> ${startStr}</p>
+            <p><strong>End:</strong> ${endStr}</p>
+            <p><strong>Duration:</strong> ${durationHours}h ${durationRemainderMinutes}m</p>
+          </div>
+        `;
+      });
+
+      resultsDiv.innerHTML = html;
+    }
+  </script>
 </body>
 </html>
