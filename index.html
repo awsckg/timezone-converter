@@ -67,20 +67,20 @@
       { name: "WET (Europe/Lisbon)", zone: "Europe/Lisbon" },
     ];
 
+    // This function correctly parses a datetime-local string as if it is in the given timezone,
+    // and returns a JS Date object in UTC representing the same instant.
     function parseZonedDateTime(dateTimeStr, timeZone) {
       if (!dateTimeStr) return null;
 
       // dateTimeStr example: "2025-05-31T18:19"
-      // Create a Date object as if dateTimeStr is in the timeZone, then convert to UTC date
-
       const [datePart, timePart] = dateTimeStr.split('T');
       const [year, month, day] = datePart.split('-').map(Number);
       const [hour, minute] = timePart.split(':').map(Number);
 
-      // Step 1: Create a Date object from input as if it was in UTC (temporary)
+      // Step 1: Create a Date object as if the input datetime is UTC (temporary)
       const tempDate = new Date(Date.UTC(year, month - 1, day, hour, minute));
 
-      // Step 2: Use Intl API to find the offset between the timezone and UTC at that moment
+      // Step 2: Use Intl.DateTimeFormat to find the timezone offset at this instant for the target zone
       const formatter = new Intl.DateTimeFormat('en-US', {
         timeZone,
         hour12: false,
@@ -93,6 +93,7 @@
       });
 
       const parts = formatter.formatToParts(tempDate);
+
       let tzYear, tzMonth, tzDay, tzHour, tzMinute, tzSecond;
 
       for (const part of parts) {
@@ -104,9 +105,8 @@
         else if (part.type === 'second') tzSecond = Number(part.value);
       }
 
-      // Step 3: Convert this back to a UTC timestamp to get correct Date object for the input time in the given timeZone
-      const utcTimestamp = Date.UTC(tzYear, tzMonth - 1, tzDay, tzHour, tzMinute, tzSecond);
-      return new Date(utcTimestamp);
+      // Step 3: Build UTC timestamp that corresponds to the input datetime in the input timezone
+      return new Date(Date.UTC(tzYear, tzMonth - 1, tzDay, tzHour, tzMinute, tzSecond));
     }
 
     function convertTime() {
@@ -122,6 +122,11 @@
 
       const startUTC = parseZonedDateTime(startTimeInput, inputTimeZone);
       const endUTC = parseZonedDateTime(endTimeInput, inputTimeZone);
+
+      if (!startUTC || !endUTC || isNaN(startUTC) || isNaN(endUTC)) {
+        alert('Invalid date/time inputs!');
+        return;
+      }
 
       if (endUTC < startUTC) {
         alert('End time cannot be earlier than start time');
@@ -164,16 +169,15 @@
           second: '2-digit',
         });
 
-        const durationMinutes = Math.floor(durationMs / (1000 * 60));
-        const durationHours = Math.floor(durationMinutes / 60);
-        const durationRemainderMinutes = durationMinutes % 60;
+        const durationHours = Math.floor(durationMs / (1000 * 60 * 60));
+        const durationMinutes = Math.floor((durationMs % (1000 * 60 * 60)) / (1000 * 60));
 
         html += `
           <div class="time-segment">
             <h3>${name}</h3>
             <p><strong>Start:</strong> ${startStr}</p>
             <p><strong>End:</strong> ${endStr}</p>
-            <p><strong>Duration:</strong> ${durationHours}h ${durationRemainderMinutes}m</p>
+            <p><strong>Duration:</strong> ${durationHours}h ${durationMinutes}m</p>
           </div>
         `;
       });
