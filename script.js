@@ -39,11 +39,16 @@ setInterval(updateWorldClocks, 1000); // Update every second
 
 // Time Zone Converter Function
 function convertTime() {
+    console.log('Convert button clicked');
+    
     // Get input values
     const startTime = document.getElementById('startTime').value;
     const endTime = document.getElementById('endTime').value;
-    const selectedZone = document.getElementById('inputTimeZone').value;
-
+    console.log('Start time:', startTime);
+    console.log('End time:', endTime);
+    
+    // Rest of the function...
+}
     // Validate inputs
     if (!startTime || !endTime) {
         alert('Please select both start and end times');
