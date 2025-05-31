@@ -9,22 +9,16 @@ function convertTime() {
     return;
   }
 
-  // Convert input time string (local datetime) + input timezone to Date object in UTC
-  // Since datetime-local inputs have no timezone info, we parse them as if they are in inputTimeZone
-  // To do this accurately, we use Intl API trick:
-
-  // Helper: parse date-time string in a specific IANA time zone to UTC Date object
+  // Helper: parse datetime string as if it's in the selected input timezone
   function parseZonedDateTime(dateTimeStr, timeZone) {
-    // Create a Date object with the given string as if it's in timeZone
     const [date, time] = dateTimeStr.split('T');
     const [year, month, day] = date.split('-').map(Number);
     const [hour, minute] = time.split(':').map(Number);
 
-    // Get the offset in minutes for this timezone at this date
+    // Step 1: create a UTC date using the wall time values
     const dt = new Date(Date.UTC(year, month - 1, day, hour, minute));
-    // We want to get the equivalent UTC time for this local time in that time zone.
-    // Use Intl.DateTimeFormat with timeZone and get offset by comparing formatted time.
 
+    // Step 2: format it using Intl.DateTimeFormat in the given timezone
     const dtFormat = new Intl.DateTimeFormat('en-US', {
       timeZone,
       hour12: false,
@@ -36,7 +30,6 @@ function convertTime() {
       second: '2-digit',
     });
 
-    // Format the Date as if it's in the target timezone
     const parts = dtFormat.formatToParts(dt);
     let tzYear, tzMonth, tzDay, tzHour, tzMinute, tzSecond;
 
@@ -49,19 +42,11 @@ function convertTime() {
       else if (part.type === 'second') tzSecond = Number(part.value);
     }
 
-    // Calculate the difference between the date components in UTC and in timezone
-    // This difference is the offset
-
+    const localTimestamp = Date.UTC(tzYear, tzMonth - 1, tzDay, tzHour, tzMinute, tzSecond);
     const utcTimestamp = dt.getTime();
 
-    // Now construct the local timestamp from parts in the timezone
-    const localTimestamp = Date.UTC(tzYear, tzMonth - 1, tzDay, tzHour, tzMinute, tzSecond);
-
-    // The offset is the difference between utcTimestamp and localTimestamp
     const offset = utcTimestamp - localTimestamp;
-
-    // Adjust the original date by the offset to get the true UTC timestamp for the input time in the input timezone
-    return new Date(localTimestamp);
+    return new Date(utcTimestamp - offset);
   }
 
   const startUTC = parseZonedDateTime(startTimeInput, inputTimeZone);
@@ -86,7 +71,7 @@ function convertTime() {
 
   let html = `<h2 class="results-title">Converted Times:</h2>`;
 
-  // Epoch times
+  // Epoch time segment
   html += `
     <div class="time-segment epoch-segment">
       <h3>⏱️ EPOCH Time (milliseconds since Jan 1, 1970 UTC)</h3>
@@ -96,7 +81,7 @@ function convertTime() {
     </div>
   `;
 
-  // For each time zone, convert and display start and end times, and duration in hours and minutes
+  // Convert for each target time zone
   for (const [zoneAbbr, tzName] of Object.entries(timeZones)) {
     const startStr = startUTC.toLocaleString('en-US', {
       timeZone: tzName,
