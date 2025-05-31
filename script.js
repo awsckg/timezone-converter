@@ -3,42 +3,24 @@ function convertTime() {
   const startTime = document.getElementById('startTime').value;
   const endTime = document.getElementById('endTime').value;
 
-  // Validate input
   if (!startTime || !endTime) {
     alert('Please select both start and end times');
     return;
   }
 
-  // Parse input times as if they are in the selected input time zone
-  // Trick: build date strings with 'Z' UTC suffix by converting input local time from inputTimeZone to UTC
-  // Because HTML input datetime-local gives local date/time without timezone info,
-  // we must interpret it as if it's in the input timezone.
-
   // Helper to parse datetime-local as Date in specified timezone
   function parseDateInTimeZone(dateTimeLocal, timeZone) {
-    // dateTimeLocal format: "YYYY-MM-DDTHH:mm"
-    // Create a Date object using Intl API to get equivalent UTC time for the given tz
     const [date, time] = dateTimeLocal.split('T');
     const [year, month, day] = date.split('-').map(Number);
     const [hour, minute] = time.split(':').map(Number);
-
-    // Use Date.UTC but adjust with timezone offset
-    // To get the exact UTC timestamp of the input local time in the given timezone,
-    // we can use Intl.DateTimeFormat with timeZone and formatToParts.
-
-    // Create a Date at UTC that matches the local time if interpreted in the timezone
     const utcDate = new Date(Date.UTC(year, month - 1, day, hour, minute));
-
-    // Find offset between UTC and the timeZone at that date-time
     const dtf = new Intl.DateTimeFormat('en-US', {
       hour12: false,
       timeZone,
       year: 'numeric', month: '2-digit', day: '2-digit',
       hour: '2-digit', minute: '2-digit', second: '2-digit'
     });
-
     const parts = dtf.formatToParts(utcDate);
-    // Extract the formatted parts
     let tzYear, tzMonth, tzDay, tzHour, tzMinute, tzSecond;
     for (const part of parts) {
       if (part.type === 'year') tzYear = Number(part.value);
@@ -48,16 +30,9 @@ function convertTime() {
       else if (part.type === 'minute') tzMinute = Number(part.value);
       else if (part.type === 'second') tzSecond = Number(part.value);
     }
-
-    // Now build a Date that would be interpreted as the timeZone local time at utcDate
-    // If the tz date parts do not match input, adjust utcDate by difference in milliseconds
-
-    // Calculate difference in ms between input local time and the timeZone interpretation
     const inputLocalDate = new Date(year, month - 1, day, hour, minute, 0);
     const tzLocalDate = new Date(tzYear, tzMonth - 1, tzDay, tzHour, tzMinute, tzSecond);
-
     const offsetMs = inputLocalDate - tzLocalDate;
-
     return new Date(utcDate.getTime() + offsetMs);
   }
 
@@ -69,7 +44,6 @@ function convertTime() {
     return;
   }
 
-  // Time zones to convert to (same as options but with codes)
   const timeZones = {
     'IST': 'Asia/Kolkata',
     'UTC': 'UTC',
@@ -84,36 +58,59 @@ function convertTime() {
 
   let results = `<h2 class="results-title">Converted Times:</h2>`;
 
-  // Show EPOCH time for original start and end in ms
+  // Epoch times
   results += `
     <div class="time-segment epoch-segment">
-      <h3><i class="fas fa-clock"></i> EPOCH Time</h3>
+      <h3>🕒 Epoch Time</h3>
       <p><strong>Start:</strong> ${startDate.getTime()} ms</p>
       <p><strong>End:</strong> ${endDate.getTime()} ms</p>
       <p><strong>Duration:</strong> ${endDate.getTime() - startDate.getTime()} ms</p>
     </div>
   `;
 
-  // Store converted dates for difference calculation
   const convertedTimes = {};
 
   for (const [abbr, tz] of Object.entries(timeZones)) {
-    try {
-      const options = {
-        timeZone: tz,
-        hour12: true,
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-      };
+    const options = {
+      timeZone: tz,
+      hour12: true,
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    };
 
-      const startStr = startDate.toLocaleString('en-US', options);
-      const endStr = endDate.toLocaleString('en-US', options);
+    const startStr = startDate.toLocaleString('en-US', options);
+    const endStr = endDate.toLocaleString('en-US', options);
 
-      // Also store converted Date objects for diff calc
-      convertedTimes[abbr] = {
-        start: new Date(startDate.toLocaleString('en-US', { timeZone: tz })),
-        end: new Date(endDate.toLocaleString('en-US', { time
+    convertedTimes[abbr] = {
+      start: new Date(startDate.toLocaleString('en-US', { timeZone: tz })),
+      end: new Date(endDate.toLocaleString('en-US', { timeZone: tz })),
+    };
+
+    results += `
+      <div class="time-segment">
+        <h3>${abbr} (${tz})</h3>
+        <p><strong>Start:</strong> ${startStr}</p>
+        <p><strong>End:</strong> ${endStr}</p>
+      </div>
+    `;
+  }
+
+  // Time differences
+  results += `<div class="time-differences"><h3>🕓 Time Differences</h3><ul>`;
+  const tzKeys = Object.keys(convertedTimes);
+  for (let i = 0; i < tzKeys.length; i++) {
+    for (let j = i + 1; j < tzKeys.length; j++) {
+      const a = tzKeys[i], b = tzKeys[j];
+      const diffMs = convertedTimes[a].start - convertedTimes[b].start;
+      const diffHrs = (diffMs / (1000 * 60 * 60)).toFixed(1);
+      results += `<li><strong>${a} → ${b}:</strong> ${diffHrs} hours</li>`;
+    }
+  }
+  results += `</ul></div>`;
+
+  document.getElementById('results').innerHTML = results;
+}
