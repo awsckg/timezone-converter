@@ -52,6 +52,17 @@ function convertTime() {
         alert('Please select both start and end times');
         return;
     }
+    // Create Date objects directly from the datetime-local inputs
+    const startUTC = new Date(startTimeInput);
+    const endUTC = new Date(endTimeInput);
+
+    if (endUTC < startUTC) {
+        alert('End time cannot be earlier than start time');
+        return;
+    }
+
+    // Rest of your conversion code remains the same...
+}
 
     // Helper function to format date-time
     function formatDateTime(dateStr, timeStr) {
