@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>World Clock & Time Zone Converter</title>
   <link rel="stylesheet" href="styles.css" />
-  <script src="script.js" defer></script>
 </head>
 <body>
   <div class="container">
@@ -28,14 +27,14 @@
           <h3>🇮🇳 Mumbai</h3>
           <div id="mumbai-time" class="time-display"></div>
         </div>
-      <div class="clock-item">
-        <h3>🇦🇺 Sydney</h3>
-        <div id="sydney-time" class="time-display"></div>
-      </div>
-    <div class="clock-item">
-        <h3>🇸🇬 Singapore</h3>
-        <div id="singapore-time" class="time-display"></div>
-      </div>  
+        <div class="clock-item">
+          <h3>🇦🇺 Sydney</h3>
+          <div id="sydney-time" class="time-display"></div>
+        </div>
+        <div class="clock-item">
+          <h3>🇸🇬 Singapore</h3>
+          <div id="singapore-time" class="time-display"></div>
+        </div>  
       </div>
     </div>
 
@@ -64,12 +63,12 @@
 
           <div class="input-group">
             <label for="startTime">📅 Start Time</label>
-            <input type="datetime-local" id="startTime" />
+            <input type="text" id="startTime" placeholder="DD/MM/YYYY HH:mm" />
           </div>
 
           <div class="input-group">
             <label for="endTime">📅 End Time</label>
-            <input type="datetime-local" id="endTime" />
+            <input type="text" id="endTime" placeholder="DD/MM/YYYY HH:mm" />
           </div>
         </div>
 
@@ -79,5 +78,46 @@
       <div id="results"></div>
     </div>
   </div>
+
+  <script>
+    // Your JavaScript code here (the entire script from the previous response)
+    // Function to update world clocks
+    function updateWorldClocks() {
+        const now = new Date();
+        
+        const options = {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: true
+        };
+        
+        const londonTime = new Date(now.toLocaleString('en-US', { timeZone: 'Europe/London' }));
+        document.getElementById('london-time').textContent = londonTime.toLocaleString('en-US', options);
+        
+        const newYorkTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+        document.getElementById('newyork-time').textContent = newYorkTime.toLocaleString('en-US', options);
+        
+        const tokyoTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
+        document.getElementById('tokyo-time').textContent = tokyoTime.toLocaleString('en-US', options);
+        
+        const mumbaiTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
+        document.getElementById('mumbai-time').textContent = mumbaiTime.toLocaleString('en-US', options);
+
+        const sydneyTime = new Date(now.toLocaleString('en-US', { timeZone: 'Australia/Sydney' }));
+        document.getElementById('sydney-time').textContent = sydneyTime.toLocaleString('en-US', options);
+
+        const singaporeTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Singapore' }));
+        document.getElementById('singapore-time').textContent = singaporeTime.toLocaleString('en-US', options);
+    }
+
+    setInterval(updateWorldClocks, 1000);
+    updateWorldClocks();
+
+    function convertTime() {
+        // Rest of your convertTime function code here
+        // (Copy the entire convertTime function from the previous response)
+    }
+  </script>
 </body>
 </html>
