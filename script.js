@@ -9,7 +9,7 @@ function updateWorldClocks() {
         second: '2-digit',
         hour12: true
     };
-
+    
     // London (UTC+1 during summer)
     const londonTime = new Date(now.toLocaleString('en-US', { timeZone: 'Europe/London' }));
     document.getElementById('london-time').textContent = londonTime.toLocaleString('en-US', options);
@@ -25,6 +25,15 @@ function updateWorldClocks() {
     // Mumbai (UTC+5:30)
     const mumbaiTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
     document.getElementById('mumbai-time').textContent = mumbaiTime.toLocaleString('en-US', options);
+
+    // Sydney (Australia)
+const sydneyTime = new Date(now.toLocaleString('en-US', { timeZone: 'Australia/Sydney' }));
+document.getElementById('sydney-time').textContent = sydneyTime.toLocaleString('en-US', options);
+
+// Singapore
+const singaporeTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Singapore' }));
+document.getElementById('singapore-time').textContent = singaporeTime.toLocaleString('en-US', options);
+
 }
 
 // Update world clocks every second
