@@ -9,23 +9,40 @@ function convertTime() {
     return;
   }
 
-  // Parse date-time string in a specific IANA time zone
   function parseZonedDateTime(dateTimeStr, timeZone) {
-    const date = new Date(dateTimeStr); // parse as local datetime
-    const options = {
-      timeZone,
-      year: 'numeric', month: '2-digit', day: '2-digit',
-      hour: '2-digit', minute: '2-digit', second: '2-digit',
-      hour12: false
-    };
+    const [date, time] = dateTimeStr.split('T');
+    const [year, month, day] = date.split('-').map(Number);
+    const [hour, minute] = time.split(':').map(Number);
 
-    const parts = new Intl.DateTimeFormat('en-US', options).formatToParts(date);
-    const values = {};
-    parts.forEach(({ type, value }) => {
-      values[type] = parseInt(value, 10);
+    // Create naive UTC time for the input
+    const utcGuess = new Date(Date.UTC(year, month - 1, day, hour, minute));
+
+    // Format that guess in the *target* time zone
+    const dtFormat = new Intl.DateTimeFormat('en-US', {
+      timeZone,
+      hour12: false,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
     });
 
-    return new Date(Date.UTC(values.year, values.month - 1, values.day, values.hour, values.minute, values.second));
+    const parts = dtFormat.formatToParts(utcGuess);
+    let tzYear, tzMonth, tzDay, tzHour, tzMinute, tzSecond;
+
+    for (const part of parts) {
+      if (part.type === 'year') tzYear = Number(part.value);
+      else if (part.type === 'month') tzMonth = Number(part.value);
+      else if (part.type === 'day') tzDay = Number(part.value);
+      else if (part.type === 'hour') tzHour = Number(part.value);
+      else if (part.type === 'minute') tzMinute = Number(part.value);
+      else if (part.type === 'second') tzSecond = Number(part.value);
+    }
+
+    // Rebuild correct UTC timestamp for that zone-local time
+    return new Date(Date.UTC(tzYear, tzMonth - 1, tzDay, tzHour, tzMinute, tzSecond));
   }
 
   const startUTC = parseZonedDateTime(startTimeInput, inputTimeZone);
@@ -50,7 +67,7 @@ function convertTime() {
 
   let html = `<h2 class="results-title">Converted Times:</h2>`;
 
-  // Epoch times
+  // Epoch time
   html += `
     <div class="time-segment epoch-segment">
       <h3>⏱️ EPOCH Time (milliseconds since Jan 1, 1970 UTC)</h3>
@@ -60,7 +77,7 @@ function convertTime() {
     </div>
   `;
 
-  // For each time zone
+  // Format times in all zones
   for (const [zoneAbbr, tzName] of Object.entries(timeZones)) {
     const startStr = startUTC.toLocaleString('en-US', {
       timeZone: tzName,
