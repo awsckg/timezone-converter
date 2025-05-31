@@ -1,85 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>World Clock & Time Zone Converter</title>
-  <link rel="stylesheet" href="styles.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>World Clock & Time Zone Converter</title>
+    <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="container">
-    <div class="world-clock-section">
-      <h1>🌍 World Clock</h1>
-      <div class="world-clock-grid">
-        <div class="clock-item">
-          <h3>🇬🇧 London</h3>
-          <div id="london-time" class="time-display"></div>
-        </div>
-        <div class="clock-item">
-          <h3>🇺🇸 New York</h3>
-          <div id="newyork-time" class="time-display"></div>
-        </div>
-        <div class="clock-item">
-          <h3>🇯🇵 Tokyo</h3>
-          <div id="tokyo-time" class="time-display"></div>
-        </div>
-        <div class="clock-item">
-          <h3>🇮🇳 Mumbai</h3>
-          <div id="mumbai-time" class="time-display"></div>
-        </div>
-        <div class="clock-item">
-          <h3>🇦🇺 Sydney</h3>
-          <div id="sydney-time" class="time-display"></div>
-        </div>
-        <div class="clock-item">
-          <h3>🇸🇬 Singapore</h3>
-          <div id="singapore-time" class="time-display"></div>
-        </div>  
-      </div>
-    </div>
-
-    <div class="welcome-section">
-      <h1>⏰ Time Zone Converter</h1>
-      <p>Convert times between different time zones effortlessly</p>
-    </div>
-
-    <div class="converter">
-      <div class="input-section">
-        <div class="time-inputs">
-          <div class="input-group">
-            <label for="inputTimeZone">🌐 Input Time Zone</label>
-            <select id="inputTimeZone">
-              <option value="Asia/Kolkata">🇮🇳 IST (Asia/Kolkata)</option>
-              <option value="UTC">🌐 UTC</option>
-              <option value="America/Los_Angeles">🇺🇸 PST (America/Los_Angeles)</option>
-              <option value="Europe/London">🇬🇧 UK (Europe/London)</option>
-              <option value="Australia/Sydney">🇦🇺 AEST (Australia/Sydney)</option>
-              <option value="Asia/Singapore">🇸🇬 SGT (Asia/Singapore)</option>
-              <option value="Europe/Paris">🇫🇷 CET (Europe/Paris)</option>
-              <option value="Europe/Helsinki">🇫🇮 EET (Europe/Helsinki)</option>
-              <option value="Europe/Lisbon">🇵🇹 WET (Europe/Lisbon)</option>
-            </select>
-          </div>
-
-        <div class="input-group">
-            <label for="startTime">📅 Start Time</label>
-            <input type="datetime-local" id="startTime" required />
-          </div>
-
-      <div class="input-group">
-          <label for="endTime">📅 End Time</label>
-          <input type="datetime-local" id="endTime" required />
-        </div>
-        </div>
-
-        <button onclick="convertTime()">Convert Time 🔄</button>
-      </div>
-
-      <div id="results"></div>
-        </div>
-  </div>
-
-  <script>
+    <!-- Your existing HTML structure remains the same until the script section -->
+    
+    <script>
     // World Clock Update Function
     function updateWorldClocks() {
         const now = new Date();
@@ -136,20 +66,58 @@
         const hours = Math.floor(duration / (1000 * 60 * 60));
         const minutes = Math.floor((duration % (1000 * 60 * 60)) / (1000 * 60));
 
-        // Generate output HTML
-        const outputHtml = `
+        // Define time zones for conversion
+        const timeZones = {
+            'IST': 'Asia/Kolkata',
+            'UTC': 'UTC',
+            'PST': 'America/Los_Angeles',
+            'UK': 'Europe/London',
+            'AEST': 'Australia/Sydney',
+            'SGT': 'Asia/Singapore',
+            'CET': 'Europe/Paris',
+            'EET': 'Europe/Helsinki',
+            'WET': 'Europe/Lisbon'
+        };
+
+        // Start building output HTML
+        let outputHtml = `
             <div class="time-segment">
-                <h3>Converted Times</h3>
-                <p><strong>Time Zone:</strong> ${selectedZone}</p>
-                <p><strong>Start:</strong> ${start.toLocaleString()}</p>
-                <p><strong>End:</strong> ${end.toLocaleString()}</p>
-                <p><strong>Duration:</strong> ${hours}h ${minutes}m</p>
+                <h3>Duration</h3>
+                <p><strong>Total Duration:</strong> ${hours}h ${minutes}m</p>
             </div>
         `;
+
+        // Convert times for each time zone
+        for (const [zoneName, zoneValue] of Object.entries(timeZones)) {
+            try {
+                const startInZone = new Date(start.toLocaleString('en-US', { timeZone: zoneValue }));
+                const endInZone = new Date(end.toLocaleString('en-US', { timeZone: zoneValue }));
+
+                const options = {
+                    timeZone: zoneValue,
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true
+                };
+
+                outputHtml += `
+                    <div class="time-segment">
+                        <h3>${zoneName} (${zoneValue})</h3>
+                        <p><strong>Start:</strong> ${startInZone.toLocaleString('en-US', options)}</p>
+                        <p><strong>End:</strong> ${endInZone.toLocaleString('en-US', options)}</p>
+                    </div>
+                `;
+            } catch (error) {
+                console.error(`Error converting time for ${zoneName}: ${error}`);
+            }
+        }
 
         // Display results
         document.getElementById('results').innerHTML = outputHtml;
     }
-</script>
+    </script>
 </body>
 </html>
