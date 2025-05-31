@@ -61,15 +61,15 @@
             </select>
           </div>
 
-          <div class="input-group">
+        <div class="input-group">
             <label for="startTime">📅 Start Time</label>
-            <input type="text" id="startTime" placeholder="DD/MM/YYYY HH:mm" />
+            <input type="datetime-local" id="startTime" required />
           </div>
 
-          <div class="input-group">
-            <label for="endTime">📅 End Time</label>
-            <input type="text" id="endTime" placeholder="DD/MM/YYYY HH:mm" />
-          </div>
+      <div class="input-group">
+          <label for="endTime">📅 End Time</label>
+          <input type="datetime-local" id="endTime" required />
+        </div>
         </div>
 
         <button onclick="convertTime()">Convert Time 🔄</button>
