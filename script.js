@@ -9,18 +9,16 @@ function convertTime() {
     return;
   }
 
-  // Helper: parse datetime string as if it's in the selected input timezone
+  // Correct helper to convert datetime-local + IANA timezone into accurate UTC Date
   function parseZonedDateTime(dateTimeStr, timeZone) {
     const [date, time] = dateTimeStr.split('T');
     const [year, month, day] = date.split('-').map(Number);
     const [hour, minute] = time.split(':').map(Number);
+    const localDate = new Date(year, month - 1, day, hour, minute);
 
-    // Step 1: create a UTC date using the wall time values
-    const dt = new Date(Date.UTC(year, month - 1, day, hour, minute));
-
-    // Step 2: format it using Intl.DateTimeFormat in the given timezone
-    const dtFormat = new Intl.DateTimeFormat('en-US', {
+    const format = new Intl.DateTimeFormat('en-US', {
       timeZone,
+      timeZoneName: 'short',
       hour12: false,
       year: 'numeric',
       month: '2-digit',
@@ -30,7 +28,7 @@ function convertTime() {
       second: '2-digit',
     });
 
-    const parts = dtFormat.formatToParts(dt);
+    const parts = format.formatToParts(localDate);
     let tzYear, tzMonth, tzDay, tzHour, tzMinute, tzSecond;
 
     for (const part of parts) {
@@ -42,11 +40,7 @@ function convertTime() {
       else if (part.type === 'second') tzSecond = Number(part.value);
     }
 
-    const localTimestamp = Date.UTC(tzYear, tzMonth - 1, tzDay, tzHour, tzMinute, tzSecond);
-    const utcTimestamp = dt.getTime();
-
-    const offset = utcTimestamp - localTimestamp;
-    return new Date(utcTimestamp - offset);
+    return new Date(Date.UTC(tzYear, tzMonth - 1, tzDay, tzHour, tzMinute, tzSecond));
   }
 
   const startUTC = parseZonedDateTime(startTimeInput, inputTimeZone);
@@ -71,7 +65,7 @@ function convertTime() {
 
   let html = `<h2 class="results-title">Converted Times:</h2>`;
 
-  // Epoch time segment
+  // Epoch times
   html += `
     <div class="time-segment epoch-segment">
       <h3>⏱️ EPOCH Time (milliseconds since Jan 1, 1970 UTC)</h3>
@@ -81,7 +75,7 @@ function convertTime() {
     </div>
   `;
 
-  // Convert for each target time zone
+  // For each time zone, convert and display start and end times
   for (const [zoneAbbr, tzName] of Object.entries(timeZones)) {
     const startStr = startUTC.toLocaleString('en-US', {
       timeZone: tzName,
