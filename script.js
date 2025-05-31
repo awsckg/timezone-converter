@@ -1,3 +1,32 @@
+// World Clock live update function
+function updateWorldClocks() {
+  const cities = {
+    london: 'Europe/London',
+    newyork: 'America/New_York',
+    tokyo: 'Asia/Tokyo',
+    mumbai: 'Asia/Kolkata',
+    sydney: 'Australia/Sydney',
+    singapore: 'Asia/Singapore'
+  };
+
+  for (const [id, tz] of Object.entries(cities)) {
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('en-US', {
+      timeZone: tz,
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true
+    });
+    document.getElementById(id).textContent = timeStr;
+  }
+}
+
+updateWorldClocks();
+setInterval(updateWorldClocks, 1000);
+
+
+// Convert Time function
 function convertTime() {
   const inputTimeZone = document.getElementById('inputTimeZone').value;
   const startTime = document.getElementById('startTime').value;
